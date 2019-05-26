@@ -227,7 +227,7 @@ export class DraggableColBlock extends React.Component<
             const res = (
               <div
                 className="drag-node"
-                key={'row_' + childId}
+                key={'node_' + childId}
                 style={{
                   position: 'absolute',
                   width: row.width,

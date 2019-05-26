@@ -128,7 +128,7 @@ export function moveInDirection(
         return value;
       opts = { afterItemId: parentNode.childrenIds[curPositionInParent + 1] };
     } else {
-      if (grandParentNode) {
+      if (grandParentNode && grandParentNode.type === 'col') {
         const parentPositionInGrandparent = grandParentNode.childrenIds.indexOf(
           parentNode.id
         );
@@ -165,7 +165,7 @@ export function moveInDirection(
         return value;
       opts = { afterItemId: parentNode.childrenIds[curPositionInParent + 1] };
     } else {
-      if (grandParentNode) {
+      if (grandParentNode && grandParentNode.type === 'row') {
         const parentPositionInGrandparent = grandParentNode.childrenIds.indexOf(
           parentNode.id
         );
@@ -200,13 +200,13 @@ export function moveInDirection(
         ? -1
         : moveOpts.direction === 'down'
         ? 1
-        : 0) * (moveOpts.stepPx || 10);
+        : 0) * (moveOpts.stepPx || 1);
     const leftDelta =
       (moveOpts.direction === 'left'
         ? -1
         : moveOpts.direction === 'right'
         ? 1
-        : 0) * (moveOpts.stepPx || 10);
+        : 0) * (moveOpts.stepPx || 1);
     opts = {
       absolutePos: {
         top: (node.top || 0) + topDelta,

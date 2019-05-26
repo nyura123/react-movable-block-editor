@@ -15,15 +15,19 @@ export function addRow(
   let parentNodeId = (props ? props.parentId : focusedNodeId) || rootNodeId;
   let parentNode = byId[parentNodeId];
 
-  if (!parentNode || parentNode.type !== 'col') {
+  const allowedParents = ['col', 'layer'];
+
+  if (!parentNode || allowedParents.indexOf(parentNode.type) < 0) {
     // try parent
     parentNodeId = parentNode ? parentNode.parentId : null;
     parentNode = parentNodeId ? byId[parentNodeId] : parentNode;
 
-    if (!parentNode || parentNode.type !== 'col') {
+    if (!parentNode || allowedParents.indexOf(parentNode.type) < 0) {
       return {
         error:
-          'Can only add a row inside a column, please select a column by clicking on it',
+          'Can only add a row inside ' +
+          allowedParents.join(', ') +
+          ', please select a column by clicking on it',
         value,
       };
     }
@@ -48,10 +52,12 @@ export function addRow(
 
   // update new child and all siblings' heights
   const updates: any = {};
-  if (parentNode && parentNode.childrenIds.length >= 1) {
-    const childHeight = parentNode.height / parentNode.childrenIds.length;
-    for (const childId of parentNode.childrenIds) {
-      updates[childId] = { ...byId[childId], height: childHeight };
+  if (parentNode.type === 'col') {
+    if (parentNode && parentNode.childrenIds.length >= 1) {
+      const childHeight = parentNode.height / parentNode.childrenIds.length;
+      for (const childId of parentNode.childrenIds) {
+        updates[childId] = { ...byId[childId], height: childHeight };
+      }
     }
   }
 
@@ -73,15 +79,19 @@ export function addCol(
   let parentNodeId = (props ? props.parentId : focusedNodeId) || rootNodeId;
   let parentNode = byId[parentNodeId];
 
-  if (!parentNode || parentNode.type !== 'row') {
+  const allowedParents = ['row', 'layer'];
+
+  if (!parentNode || allowedParents.indexOf(parentNode.type) < 0) {
     // try parent
     parentNodeId = parentNode ? parentNode.parentId : null;
     parentNode = parentNodeId ? byId[parentNodeId] : parentNode;
 
-    if (!parentNode || parentNode.type !== 'row') {
+    if (!parentNode || allowedParents.indexOf(parentNode.type) < 0) {
       return {
         error:
-          "'Can only add a column inside a row, please select a row by clicking on it",
+          'Can only add a column inside ' +
+          allowedParents.join(', ') +
+          ', please select a column by clicking on it',
         value,
       };
     }
@@ -106,10 +116,12 @@ export function addCol(
 
   // update new child and all siblings' widths
   const updates: any = {};
-  if (parentNode && parentNode.childrenIds.length >= 1) {
-    const childWidth = parentNode.width / parentNode.childrenIds.length;
-    for (const childId of parentNode.childrenIds) {
-      updates[childId] = { ...byId[childId], width: childWidth };
+  if (parentNode.type === 'row') {
+    if (parentNode && parentNode.childrenIds.length >= 1) {
+      const childWidth = parentNode.width / parentNode.childrenIds.length;
+      for (const childId of parentNode.childrenIds) {
+        updates[childId] = { ...byId[childId], width: childWidth };
+      }
     }
   }
 
@@ -131,11 +143,11 @@ export function addMarkDown(
   let parentNodeId = (props ? props.parentId : focusedNodeId) || rootNodeId;
   let parentNode = byId[parentNodeId];
 
-  if (!parentNode || ['row', 'col', 'layer'].indexOf(parentNode.type) < 0) {
+  const allowedParents = ['row', 'col', 'layer'];
+
+  if (!parentNode || allowedParents.indexOf(parentNode.type) < 0) {
     return {
-      error:
-        'Can only add markdown text inside ' +
-        ['row', 'col', 'layer'].join(', '),
+      error: 'Can only add markdown text inside ' + allowedParents.join(', '),
       value,
     };
   }
@@ -145,8 +157,8 @@ export function addMarkDown(
   const name = 'markdown' + (count + 3);
   const markdown: BlockNode = {
     type: 'markdown',
-    width: Math.max(50, parentNode.width - 20),
-    height: Math.max(50, parentNode.height - 20),
+    width: Math.max(1, parentNode.width - 20),
+    height: Math.max(1, parentNode.height - 20),
     ...props,
     id: name,
     name,
@@ -180,10 +192,11 @@ export function addImage(
   let parentNodeId = (props ? props.parentId : focusedNodeId) || rootNodeId;
   let parentNode = byId[parentNodeId];
 
-  if (!parentNode || ['row', 'col', 'layer'].indexOf(parentNode.type) < 0) {
+  const allowedParents = ['row', 'col', 'layer'];
+
+  if (!parentNode || allowedParents.indexOf(parentNode.type) < 0) {
     return {
-      error:
-        'Can only add an image inside ' + ['row', 'col', 'layer'].join(', '),
+      error: 'Can only add an image inside ' + allowedParents.join(', '),
       value,
     };
   }
@@ -194,8 +207,8 @@ export function addImage(
   const image: BlockNode = {
     type: 'image',
     value: url,
-    width: Math.max(50, parentNode.width - 20),
-    height: Math.max(50, parentNode.height - 20),
+    width: Math.max(1, parentNode.width - 20),
+    height: Math.max(1, parentNode.height - 20),
     ...props,
     id: name,
     name,
@@ -220,10 +233,11 @@ export function addLayer(
   let parentNodeId = (props ? props.parentId : focusedNodeId) || rootNodeId;
   let parentNode = byId[parentNodeId];
 
-  if (!parentNode || ['row', 'col', 'layer'].indexOf(parentNode.type) < 0) {
+  const allowedParents = ['row', 'col', 'layer'];
+
+  if (!parentNode || allowedParents.indexOf(parentNode.type) < 0) {
     return {
-      error:
-        'Can only add a layer inside ' + ['row', 'col', 'layer'].join(', '),
+      error: 'Can only add a layer inside ' + allowedParents.join(', '),
       value,
     };
   }
@@ -233,8 +247,8 @@ export function addLayer(
   const name = 'layer' + (count + 3);
   const image: BlockNode = {
     type: 'layer',
-    width: Math.max(50, parentNode.width - 20),
-    height: Math.max(50, parentNode.height - 20),
+    width: Math.max(1, parentNode.width - 20),
+    height: Math.max(1, parentNode.height - 20),
     ...props,
     id: name,
     name,

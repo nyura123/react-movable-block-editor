@@ -4,6 +4,7 @@ import { ById, BlockNode } from '../../data';
 
 export const Preview = (props: { byId: ById; node: BlockNode }) => {
   const { node, byId } = props;
+  if (!node) return null;
 
   switch (node.type) {
     case 'markdown':

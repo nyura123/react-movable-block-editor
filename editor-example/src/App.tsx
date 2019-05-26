@@ -36,7 +36,7 @@ const App: React.FC = () => {
 
   const [editorState, setEditorState] = useState<BlockEditorValue>({
     copiedNode: null,
-    focusedNodeId: 'row1',
+    focusedNodeId: 'layer1',
     byId: {
       container1: {
         id: 'container1',
@@ -45,15 +45,27 @@ const App: React.FC = () => {
         parentId: null, // root
         width: 500,
         height: 300,
-        childrenIds: ['row1'],
+        childrenIds: ['layer1'],
       },
-      row1: {
-        id: 'row1',
-        type: 'row',
-        name: 'row1',
+      layer1: {
+        id: 'layer1',
+        type: 'layer',
+        name: 'layer1',
         parentId: 'container1',
-        width: 500,
-        height: 150,
+        width: 510,
+        height: 310,
+        childrenIds: ['title'],
+      },
+      title: {
+        id: 'title',
+        type: 'markdown',
+        name: 'title',
+        parentId: 'layer1',
+        width: 450,
+        height: 50,
+        top: 20,
+        left: 20,
+        value: '## Title',
         childrenIds: [],
       },
     },

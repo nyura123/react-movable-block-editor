@@ -20,6 +20,8 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
   canDrop = (types: Array<string>) => {
     const { draggedNodeType } = parseTypes(types);
     return (
+      draggedNodeType === 'row' ||
+      draggedNodeType === 'col' ||
       draggedNodeType === 'markdown' ||
       draggedNodeType === 'image' ||
       draggedNodeType === 'layer'
@@ -108,7 +110,7 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
           position: 'relative',
           width: node.width,
           height: node.height,
-          backgroundColor: node.backgroundColor || 'darkgrey',
+          backgroundColor: node.backgroundColor || '#f5f5f5a3',
           padding: 5,
           borderRadius: 3,
         }}
