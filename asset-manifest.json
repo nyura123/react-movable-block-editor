@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/react-movable-block-editor/static/css/main.8db060b8.chunk.css",
+    "main.js": "/react-movable-block-editor/static/js/main.cb76eeea.chunk.js",
+    "main.js.map": "/react-movable-block-editor/static/js/main.cb76eeea.chunk.js.map",
+    "runtime~main.js": "/react-movable-block-editor/static/js/runtime~main.913afbfa.js",
+    "runtime~main.js.map": "/react-movable-block-editor/static/js/runtime~main.913afbfa.js.map",
+    "static/css/2.dc22652a.chunk.css": "/react-movable-block-editor/static/css/2.dc22652a.chunk.css",
+    "static/js/2.1fc7a988.chunk.js": "/react-movable-block-editor/static/js/2.1fc7a988.chunk.js",
+    "static/js/2.1fc7a988.chunk.js.map": "/react-movable-block-editor/static/js/2.1fc7a988.chunk.js.map",
+    "index.html": "/react-movable-block-editor/index.html",
+    "precache-manifest.265e9dcddba4dd2afc5bc1368a8d75c9.js": "/react-movable-block-editor/precache-manifest.265e9dcddba4dd2afc5bc1368a8d75c9.js",
+    "service-worker.js": "/react-movable-block-editor/service-worker.js",
+    "static/css/2.dc22652a.chunk.css.map": "/react-movable-block-editor/static/css/2.dc22652a.chunk.css.map",
+    "static/css/main.8db060b8.chunk.css.map": "/react-movable-block-editor/static/css/main.8db060b8.chunk.css.map"
+  }
+}
