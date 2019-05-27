@@ -4,6 +4,9 @@ import logo from './logo.svg';
 import './App.css';
 
 import { makeStyles } from '@material-ui/styles';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Modal from '@material-ui/core/Modal';
 
 import {
   BlockEditor,
@@ -16,7 +19,19 @@ import 'react-resizable/css/styles.css';
 import { MyEditorToolBar } from './EditorToolBar';
 
 // optional: customize BreadCrumbs classes
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: any) => ({
+  paper: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: '20%',
+    left: '20%',
+    width: '60%',
+    padding: 20,
+    // backgroundColor: theme.palette.background.paper,
+    // boxShadow: theme.shadows[5],
+    // padding: theme.spacing(4),
+    // outline: 'none',
+  },
   breadcrumbNav: {
     display: 'flex',
     listStyleType: 'none',
@@ -29,7 +44,7 @@ const useStyles = makeStyles({
     '&::before': { content: '"  /  "' },
     marginRight: 5,
   },
-});
+}));
 
 const App: React.FC = () => {
   const classes = useStyles();
@@ -121,8 +136,24 @@ const App: React.FC = () => {
     rootNodeId: 'container1',
   });
 
+  const [showLoadJsonModal, setShowLoadJsonModal] = useState<boolean>(false);
+  const [showViewJsonModal, setShowViewJsonModal] = useState<boolean>(false);
+  const [inputJson, setInputJson] = useState<string>('');
+
+  const loadFromJson = () => {
+    try {
+      setEditorState(JSON.parse(inputJson));
+      setShowLoadJsonModal(false);
+    } catch (e) {
+      console.error('Error loading from json', e);
+      alert('Error loading from json: ' + e);
+    }
+  };
+
   return (
     <div>
+      <Button onClick={() => setShowLoadJsonModal(true)}>Load from json</Button>
+      <Button onClick={() => setShowViewJsonModal(true)}>View json</Button>
       <BlockEditorControl
         value={editorState}
         onChange={v => (console.log('VAL', v) as any) || setEditorState(v)}
@@ -135,21 +166,55 @@ const App: React.FC = () => {
         }}
       />
 
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-        }}
+      <Grid container spacing={3}>
+        <Grid item md={6}>
+          <div style={{ marginLeft: 10 }}>
+            <BlockEditor value={editorState} onChange={setEditorState} />
+          </div>
+        </Grid>
+        <Grid item md={6}>
+          <div
+            style={{ marginRight: 10, borderWidth: 1, borderStyle: 'dashed' }}
+          >
+            <Preview
+              byId={editorState.byId}
+              node={editorState.byId[editorState.rootNodeId]}
+            />
+          </div>
+        </Grid>
+      </Grid>
+      <Modal
+        aria-labelledby="view-json"
+        aria-describedby="view-json"
+        open={showViewJsonModal}
+        onClose={() => setShowViewJsonModal(false)}
       >
-        <BlockEditor value={editorState} onChange={setEditorState} />
-        <div style={{ marginLeft: 30, borderWidth: 1, borderStyle: 'dashed' }}>
-          <Preview
-            byId={editorState.byId}
-            node={editorState.byId[editorState.rootNodeId]}
-          />
+        <div className={classes.paper}>
+          <Button onClick={() => setShowViewJsonModal(false)}>Done</Button>
+          <div>json:</div>
+          <div>{JSON.stringify(editorState)}</div>
         </div>
-      </div>
+      </Modal>
+      <Modal
+        aria-labelledby="load-from-json"
+        aria-describedby="load-from-json"
+        open={showLoadJsonModal}
+        onClose={loadFromJson}
+      >
+        <div className={classes.paper}>
+          <Button onClick={loadFromJson}>Load</Button>
+          <Button onClick={() => setShowLoadJsonModal(false)}>Cancel</Button>
+          <div>json:</div>
+          <br />
+          <textarea
+            style={{ height: 200, width: '100%' }}
+            value={inputJson}
+            onChange={e => setInputJson(e.target.value)}
+          >
+            {JSON.stringify(editorState, null, 2)}
+          </textarea>
+        </div>
+      </Modal>
     </div>
   );
 };
