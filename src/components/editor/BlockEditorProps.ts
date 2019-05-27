@@ -21,12 +21,16 @@ export interface BlockEditorProps {
   renderEditBlock: (props: BlockProps) => ReactElement;
 }
 
-export function create(value: BlockEditorValue, props: Partial<BlockNode>) {
-  let { byId } = value;
+export function newBlockId(byId: ById, prefix = 'node') {
   //TODO better way to create uid
   let nextId = Object.keys(byId).length;
   while (!!byId[nextId]) nextId++;
-  const nodeId = 'node_' + nextId;
+  return prefix + '_' + nextId;
+}
+
+export function create(value: BlockEditorValue, props: Partial<BlockNode>) {
+  let { byId } = value;
+  let nodeId = newBlockId(byId);
   const node = { ...byId[nodeId], ...props };
   return { ...value, byId: updateNode(byId, node) };
 }
@@ -237,7 +241,7 @@ export function focusNode(
   node: BlockNode,
   focus = true
 ) {
-  if (!node) return;
+  if (!node) return value;
   const { focusedNodeId } = value;
   return {
     ...value,

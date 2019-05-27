@@ -86,7 +86,7 @@ export class BlockEditorControl extends React.Component<
 
   focusNode = (node: BlockNode, focus = true) => {
     const { value } = this.props;
-    (this.props.onChange as any)(focusNode(value, node, focus));
+    this.props.onChange(focusNode(value, node, focus));
   };
 
   create = (props: Partial<BlockNode>) => {

@@ -1,8 +1,9 @@
-import { BlockEditorValue } from '../BlockEditorProps';
+import { BlockEditorValue, newBlockId } from '../BlockEditorProps';
 import { BlockNode, placeNodeInParent } from '../../../data';
 
 export interface AddBlockResult {
   error?: string;
+  createdBlock?: BlockNode;
   value: BlockEditorValue;
 }
 
@@ -33,16 +34,15 @@ export function addRow(
     }
   }
 
-  const count = Object.keys(byId).length;
+  let newNodeId = newBlockId(byId, 'row');
 
-  const name = 'row' + (count + 1);
   const row: BlockNode = {
     type: 'row',
     height: 100,
     width: parentNode && parentNode.width ? parentNode.width : 500,
     ...props,
-    id: name,
-    name,
+    id: newNodeId,
+    name: newNodeId,
     childrenIds: [],
   };
 
@@ -62,6 +62,7 @@ export function addRow(
   }
 
   return {
+    createdBlock: row,
     value: {
       ...value,
       byId: { ...byId, ...updates },
@@ -97,16 +98,15 @@ export function addCol(
     }
   }
 
-  const count = Object.keys(byId).length;
+  let newNodeId = newBlockId(byId, 'row');
 
-  const name = 'col' + (count + 1);
   const col: BlockNode = {
     type: 'col',
     width: 100,
     height: parentNode.height ? parentNode.height : 100,
     ...props,
-    id: name,
-    name,
+    id: newNodeId,
+    name: newNodeId,
     childrenIds: [],
   };
 
@@ -126,6 +126,7 @@ export function addCol(
   }
 
   return {
+    createdBlock: col,
     value: {
       ...value,
       byId: { ...byId, ...updates },
@@ -152,20 +153,20 @@ export function addMarkDown(
     };
   }
 
-  const count = Object.keys(byId).length;
+  let newNodeId = newBlockId(byId, 'markdown');
 
-  const name = 'markdown' + (count + 3);
   const markdown: BlockNode = {
     type: 'markdown',
     width: Math.max(1, parentNode.width - 20),
     height: Math.max(1, parentNode.height - 20),
     ...props,
-    id: name,
-    name,
+    id: newNodeId,
+    name: newNodeId,
     childrenIds: [],
   };
 
   return {
+    createdBlock: markdown,
     value: {
       ...value,
       byId: placeNodeInParent(byId, markdown, parentNodeId),
@@ -201,21 +202,21 @@ export function addImage(
     };
   }
 
-  const count = Object.keys(byId).length;
+  let newNodeId = newBlockId(byId, 'image');
 
-  const name = 'image' + (count + 3);
   const image: BlockNode = {
     type: 'image',
     value: url,
     width: Math.max(1, parentNode.width - 20),
     height: Math.max(1, parentNode.height - 20),
     ...props,
-    id: name,
-    name,
+    id: newNodeId,
+    name: newNodeId,
     childrenIds: [],
   };
 
   return {
+    createdBlock: image,
     value: {
       ...value,
       byId: placeNodeInParent(byId, image, parentNodeId),
@@ -242,24 +243,24 @@ export function addLayer(
     };
   }
 
-  const count = Object.keys(byId).length;
+  let newNodeId = newBlockId(byId, 'layer');
 
-  const name = 'layer' + (count + 3);
-  const image: BlockNode = {
+  const layer: BlockNode = {
     type: 'layer',
     width: Math.max(1, parentNode.width - 20),
     height: Math.max(1, parentNode.height - 20),
     ...props,
-    id: name,
-    name,
+    id: newNodeId,
+    name: newNodeId,
     childrenIds: [],
   };
 
   return {
+    createdBlock: layer,
     value: {
       ...value,
-      byId: placeNodeInParent(byId, image, parentNodeId),
-      focusedNodeId: image.id,
+      byId: placeNodeInParent(byId, layer, parentNodeId),
+      focusedNodeId: layer.id,
     },
   };
 }

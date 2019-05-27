@@ -14,6 +14,12 @@ export interface BlockNode {
   height: number;
   top?: number;
   left?: number;
+  borderWidth?: number;
+  borderTopWidth?: number;
+  borderBottomWidth?: number;
+  borderLeftWidth?: number;
+  borderRightWidth?: number;
+  borderStyle?: string;
 }
 
 export type ById = any;

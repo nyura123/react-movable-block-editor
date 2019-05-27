@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import {
   BlockBreadCrumbs,
   BlockEditorControlUIProps,
+  addCol,
+  addRow,
+  BlockEditorValue,
 } from 'react-movable-block-editor';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,8 +16,18 @@ import ArrowRightIcon from '@material-ui/icons/ArrowForward';
 import ArrowUpIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownIcon from '@material-ui/icons/ArrowDownward';
 import Tooltip from '@material-ui/core/Tooltip';
+import TextField from '@material-ui/core/TextField';
 
 import { SketchPicker } from 'react-color';
+
+type BlockProp =
+  | 'width'
+  | 'height'
+  | 'top'
+  | 'left'
+  | 'borderWidth'
+  | 'borderBottomWidth'
+  | 'borderStyle';
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -22,6 +35,11 @@ const useStyles = makeStyles(theme => ({
   },
   fab: {
     margin: theme.spacing(1),
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 60,
   },
   input: {
     display: 'none',
@@ -85,6 +103,33 @@ export const MyEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
 
   const btnCls = classes.button;
 
+  const handleBlockChange = (
+    nodeId: string,
+    prop: BlockProp,
+    numeric: boolean
+  ) => (event: { target: { value: string } }) => {
+    props.updateBlock(nodeId, {
+      [prop]: numeric
+        ? event.target.value
+          ? parseInt(event.target.value, 10)
+          : undefined
+        : event.target.value,
+    });
+  };
+
+  const blockProps = [
+    { prop: 'width', numeric: true },
+    { prop: 'height', numeric: true },
+    { prop: 'top', numeric: true },
+    { prop: 'left', numeric: true },
+    { prop: 'borderWidth', numeric: true },
+    { prop: 'borderTopWidth', numeric: true },
+    { prop: 'borderBottomWidth', numeric: true },
+    { prop: 'borderLeftWidth', numeric: true },
+    { prop: 'borderRightWidth', numeric: true },
+    { prop: 'borderStyle', numeric: false },
+  ] as Array<{ prop: BlockProp; numeric: boolean }>;
+
   return (
     <div>
       <div>
@@ -140,6 +185,15 @@ export const MyEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
           onClick={() => props.addImage()}
         >
           + Image
+        </Button>
+        <Button
+          aria-label="add image"
+          className={btnCls}
+          onClick={() => {
+            props.onChange(addTable(props.value.focusedNodeId, props.value));
+          }}
+        >
+          + Table
         </Button>
       </div>
 
@@ -207,6 +261,30 @@ export const MyEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
               />
             </Button>
           </Tooltip>
+          <div>
+            {blockProps.map(blockProp => (
+              <TextField
+                key={'prop_' + blockProp.prop}
+                label={blockProp.prop}
+                value={
+                  focusedNode[blockProp.prop] === undefined
+                    ? ''
+                    : focusedNode[blockProp.prop]
+                }
+                onChange={handleBlockChange(
+                  focusedNode.id,
+                  blockProp.prop,
+                  blockProp.numeric
+                )}
+                type={blockProp.numeric ? 'number' : undefined}
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin="normal"
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -239,3 +317,52 @@ const ColorButton = (props: { color: string; onClick: () => any }) => (
     </div>
   </Button>
 );
+
+function addTable(parentId: string | null, value: BlockEditorValue) {
+  if (!parentId) {
+    alert('Please select node to add table to');
+    return value;
+  }
+  let numRowsStr = window.prompt('Enter number or rows (max 10)', '3');
+  if (numRowsStr === null) return value;
+  let numColsStr = window.prompt('Enter number or columns (max 10)', '5');
+  if (numColsStr === null) return value;
+  let widthStr = window.prompt('Enter table width (max 400)', '300');
+  if (widthStr === null) return value;
+  let heightStr = window.prompt('Enter table height (max 400)', '300');
+  if (heightStr === null) return value;
+
+  const width = Math.min(parseInt(widthStr, 10), 400);
+  const height = Math.min(parseInt(heightStr, 10), 400);
+
+  const { value: newValue, createdBlock: table } = addCol(value, {
+    width,
+    height,
+    parentId,
+  });
+  if (!table) return value;
+  value = newValue;
+  const tableId = table.id;
+
+  const numRows = Math.max(1, Math.min(parseInt(numRowsStr, 10), 10));
+  const numCols = Math.max(1, Math.min(parseInt(numColsStr, 10), 10));
+
+  for (let i = 0; i < numRows; ++i) {
+    const { value: newValue, createdBlock: row } = addRow(value, {
+      height: height / numRows,
+      parentId: tableId,
+    });
+    if (!row) break;
+    value = newValue;
+    for (let j = 0; j < numCols; ++j) {
+      const { value: newValue, createdBlock: col } = addCol(value, {
+        parentId: row.id,
+        height: row.height,
+        width: row.width / numCols,
+      });
+      if (!col) break;
+      value = newValue;
+    }
+  }
+  return value;
+}
