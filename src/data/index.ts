@@ -142,5 +142,5 @@ export function reinsertIntoList(
     return newItems;
   }
 
-  return [itemId, ...ids];
+  return [...ids, itemId];
 }
