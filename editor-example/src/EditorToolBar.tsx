@@ -323,7 +323,7 @@ function addTable(parentId: string | null, value: BlockEditorValue) {
     alert('Please select node to add table to');
     return value;
   }
-  let numRowsStr = window.prompt('Enter number or rows (max 10)', '3');
+  let numRowsStr = window.prompt('Enter number or rows (max 10)', '5');
   if (numRowsStr === null) return value;
   let numColsStr = window.prompt('Enter number or columns (max 10)', '5');
   if (numColsStr === null) return value;
@@ -351,6 +351,8 @@ function addTable(parentId: string | null, value: BlockEditorValue) {
     const { value: newValue, createdBlock: row } = addRow(value, {
       height: height / numRows,
       parentId: tableId,
+      // borderWidth: 0,
+      // borderBottomWidth: i === 0 ? 1 : 0,
     });
     if (!row) break;
     value = newValue;
@@ -359,6 +361,11 @@ function addTable(parentId: string | null, value: BlockEditorValue) {
         parentId: row.id,
         height: row.height,
         width: row.width / numCols,
+        // borderWidth: 0,
+        // borderRightWidth: j === numCols - 1 ? 0 : 1,
+        // display: 'flex',
+        // flexDirection: 'column',
+        // justifyContent: 'center',
       });
       if (!col) break;
       value = newValue;

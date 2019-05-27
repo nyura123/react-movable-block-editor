@@ -13,8 +13,12 @@ function hasBorder(node: BlockNode) {
 }
 const copyBasicProps = (node: BlockNode) => ({
   color: node.color || undefined,
+  display: (node.display || undefined) as any,
+  flexDirection: (node.flexDirection || undefined) as any,
+  justifyContent: (node.justifyContent || undefined) as any,
+  alignItems: (node.alignItems || undefined) as any,
   backgroundColor: node.backgroundColor || undefined,
-  borderWidth: node.borderWidth !== undefined ? node.borderWidth : undefined,
+  borderWidth: node.borderWidth !== undefined ? node.borderWidth : 0,
   borderTopWidth:
     node.borderTopWidth !== undefined ? node.borderTopWidth : undefined,
   borderBottomWidth:

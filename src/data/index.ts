@@ -20,6 +20,10 @@ export interface BlockNode {
   borderLeftWidth?: number;
   borderRightWidth?: number;
   borderStyle?: string;
+  display?: string;
+  flexDirection?: string;
+  justifyContent?: string;
+  alignItems?: string;
 }
 
 export type ById = any;
