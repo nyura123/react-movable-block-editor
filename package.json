@@ -1,13 +1,32 @@
 {
   "name": "react-movable-block-editor",
-  "version": "0.1.0",
+  "version": "0.1.2",
+  "author": {
+    "name": "nyura123"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nyura123/react-movable-block-editor"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "content editor",
+    "layout editor",
+    "block editor",
+    "cms",
+    "drag and drop",
+    "markdown",
+    "rich text"
+  ],
+  "license": "MIT",
   "main": "dist/index.js",
   "umd:main": "dist/react-movable-block-editor.umd.production.js",
   "module": "dist/react-movable-block-editor.es.production.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "src/css/drag.css"
+    "css/drag.css"
   ],
   "scripts": {
     "start": "tsdx watch",
@@ -45,8 +64,5 @@
     "tsdx": "^0.5.11",
     "tslib": "^1.9.3",
     "typescript": "^3.4.5"
-  },
-  "dependencies": {
-    "react-markdown": "^4.0.8"
   }
 }

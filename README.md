@@ -2,7 +2,7 @@
 
 React component for creating layouts and content via drag-and-drop blocks.
 
-The output is a an object that can be serialized to json, React, html.
+The output is an object that can be serialized to json, React, html.
 
 Live [demo](https://nyura123.github.io/react-movable-block-editor/)
 
