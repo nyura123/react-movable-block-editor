@@ -9,6 +9,7 @@ export interface BlockNode {
   color?: string | null;
   parentId?: string;
   childrenIds: Array<string>;
+  children?: Array<BlockNode>;
   isPlaceHolder?: boolean;
   width: number;
   height: number;

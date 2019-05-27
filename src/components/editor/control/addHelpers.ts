@@ -1,4 +1,5 @@
-import { BlockEditorValue, newBlockId } from '../BlockEditorProps';
+import { BlockEditorValue } from '../BlockEditorProps';
+import { newBlockId } from '../helpers';
 import { BlockNode, placeNodeInParent } from '../../../data';
 
 export interface AddBlockResult {
@@ -98,7 +99,7 @@ export function addCol(
     }
   }
 
-  let newNodeId = newBlockId(byId, 'row');
+  let newNodeId = newBlockId(byId, 'col');
 
   const col: BlockNode = {
     type: 'col',

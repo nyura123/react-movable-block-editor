@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BlockNode } from '../data';
-import { BlockEditorValue, move } from '../components/editor/BlockEditorProps';
+import { BlockEditorValue } from '../components/editor/BlockEditorProps';
+import { move } from '../components/editor/helpers';
 
 export interface DraggedInfo {
   startLeft: number;

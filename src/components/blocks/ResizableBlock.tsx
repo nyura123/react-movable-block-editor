@@ -8,7 +8,7 @@ import { ImageBlock } from './ImageBlock';
 
 // import 'react-resizable/css/styles.css'
 import { BlockProps } from './BlockProps';
-import { focusNode, update } from '../editor/BlockEditorProps';
+import { focusNode, update } from '../editor/helpers';
 
 export const ResizableBlock = (
   props: BlockProps & { width: number; height: number }

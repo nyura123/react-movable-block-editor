@@ -1,16 +1,18 @@
 import * as React from 'react';
 
 import { BlockNode } from '../../../data';
+import { BlockEditorValue } from '../BlockEditorProps';
 import {
-  BlockEditorValue,
   move,
   create,
   update,
   destroy,
   focusNode,
+  paste,
+  deepCopy,
   moveInDirection,
-} from '../BlockEditorProps';
-import { addCol, addMarkDown, addImage, addLayer, addRow } from './helpers';
+} from '../helpers';
+import { addCol, addMarkDown, addImage, addLayer, addRow } from './addHelpers';
 import {
   BlockEditorControlUIProps,
   BlockEditorControlDefaultUI,
@@ -131,35 +133,13 @@ export class BlockEditorControl extends React.Component<
       const focusedNode = byId[focusedNodeId];
       this.props.onChange({
         ...this.props.value,
-        copiedNode: { ...focusedNode },
+        copiedNode: deepCopy(byId, focusedNode),
       });
     }
   };
 
-  // TODO: deep pasting, for now just parent block
   paste = () => {
-    const {
-      value: { copiedNode },
-    } = this.props;
-    if (copiedNode && copiedNode.parentId) {
-      switch (copiedNode.type) {
-        case 'row':
-          this.addRow(copiedNode);
-          break;
-        case 'col':
-          this.addCol(copiedNode);
-          break;
-        case 'image':
-          this.addImage(copiedNode);
-          break;
-        case 'markdown':
-          this.addMarkDown(copiedNode);
-          break;
-        case 'layer':
-          this.addLayer(copiedNode);
-          break;
-      }
-    }
+    this.props.onChange(paste(this.props.value));
   };
 
   render() {

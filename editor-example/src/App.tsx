@@ -125,7 +125,7 @@ const App: React.FC = () => {
     <div>
       <BlockEditorControl
         value={editorState}
-        onChange={setEditorState}
+        onChange={v => (console.log('VAL', v) as any) || setEditorState(v)}
         UiComponent={MyEditorToolBar}
         controlUiProps={{
           breadCrumbsProps: {
