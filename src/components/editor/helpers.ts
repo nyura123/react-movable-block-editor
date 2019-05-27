@@ -18,8 +18,13 @@ export function deepCopy(byId: ById, node: BlockNode): BlockNode {
 }
 
 export function paste(value: BlockEditorValue): BlockEditorValue {
-  const { byId, copiedNode } = value;
+  const { byId } = value;
+  let { copiedNode } = value;
   if (!copiedNode) return value;
+
+  // support pasting same node multiple times - ensure childrenIds in each copy point to different arrays
+  copiedNode = deepCopy(byId, copiedNode);
+
   const { byId: newById } = pasteChild(byId, copiedNode);
   // add copied node to parent
   if (copiedNode.parentId) {
