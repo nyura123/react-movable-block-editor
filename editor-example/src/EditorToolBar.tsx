@@ -5,6 +5,7 @@ import {
   BlockEditorControlUIProps,
   addCol,
   addRow,
+  move,
   BlockEditorValue,
 } from 'react-movable-block-editor';
 
@@ -12,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ArrowLeftIcon from '@material-ui/icons/ArrowBack';
+import FlipToFront from '@material-ui/icons/FlipToFront';
 import ArrowRightIcon from '@material-ui/icons/ArrowForward';
 import ArrowUpIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownIcon from '@material-ui/icons/ArrowDownward';
@@ -190,7 +192,7 @@ export const MyEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
           aria-label="add image"
           className={btnCls}
           onClick={() => {
-            props.onChange(addTable(props.value.focusedNodeId, props.value));
+            props.onChange(addTable(props.value, props.value.focusedNodeId));
           }}
         >
           + Table
@@ -225,6 +227,19 @@ export const MyEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
           >
             <ArrowDownIcon />
           </Button>
+
+          <Tooltip title="Flip to front" aria-label="Add">
+            <Button
+              className={btnCls}
+              onClick={() =>
+                props.onChange(
+                  flipToFront(props.value, props.value.focusedNodeId)
+                )
+              }
+            >
+              <FlipToFront />
+            </Button>
+          </Tooltip>
 
           <Button
             aria-label="copy"
@@ -318,7 +333,20 @@ const ColorButton = (props: { color: string; onClick: () => any }) => (
   </Button>
 );
 
-function addTable(parentId: string | null, value: BlockEditorValue) {
+function flipToFront(value: BlockEditorValue, nodeId: string | null) {
+  if (!nodeId) return value;
+  const { byId } = value;
+  const node = byId[nodeId];
+  if (!node) return value;
+  const parentId = node.parentId;
+  const parentNode = byId[parentId];
+  if (!parentNode) return value;
+  return move(value, nodeId, parentId, {
+    afterItemId: parentNode.childrenIds[parentNode.childrenIds.length - 1],
+  });
+}
+
+function addTable(value: BlockEditorValue, parentId: string | null) {
   if (!parentId) {
     alert('Please select node to add table to');
     return value;
