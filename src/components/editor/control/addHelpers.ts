@@ -208,8 +208,10 @@ export function addImage(
   const image: BlockNode = {
     type: 'image',
     value: url,
-    width: Math.max(1, parentNode.width - 20),
-    height: Math.max(1, parentNode.height - 20),
+    width: 200,
+    height: 200,
+    // width: Math.max(1, parentNode.width - 20),
+    // height: Math.max(1, parentNode.height - 20),
     ...props,
     id: newNodeId,
     name: newNodeId,
