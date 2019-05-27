@@ -125,12 +125,12 @@ export const MyEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
     { prop: 'top', numeric: true },
     { prop: 'left', numeric: true },
     { prop: 'borderWidth', numeric: true },
-    { prop: 'borderTopWidth', numeric: true },
-    { prop: 'borderBottomWidth', numeric: true },
-    { prop: 'borderLeftWidth', numeric: true },
-    { prop: 'borderRightWidth', numeric: true },
+    { prop: 'borderTopWidth', label: 'bTopW', numeric: true },
+    { prop: 'borderBottomWidth', label: 'bBottomW', numeric: true },
+    { prop: 'borderLeftWidth', label: 'bLeftW', numeric: true },
+    { prop: 'borderRightWidth', label: 'bRightW', numeric: true },
     { prop: 'borderStyle', numeric: false },
-  ] as Array<{ prop: BlockProp; numeric: boolean }>;
+  ] as Array<{ prop: BlockProp; label?: string; numeric: boolean }>;
 
   return (
     <div>
@@ -276,11 +276,11 @@ export const MyEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
               />
             </Button>
           </Tooltip>
-          <div>
+          <div style={{ paddingBottom: 5 }}>
             {blockProps.map(blockProp => (
               <TextField
                 key={'prop_' + blockProp.prop}
-                label={blockProp.prop}
+                label={blockProp.label || blockProp.prop}
                 value={
                   focusedNode[blockProp.prop] === undefined
                     ? ''
