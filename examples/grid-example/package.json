@@ -1,6 +1,7 @@
 {
   "name": "grid-example",
   "version": "0.1.0",
+  "homepage": "https://nyura123.github.io/react-movable-block-grid-example",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.0.1",
@@ -10,7 +11,7 @@
     "@types/node": "12.0.2",
     "@types/react": "16.8.18",
     "@types/react-dom": "16.8.4",
-    "lodash": "^4.17.11",
+    "gh-pages": "^2.0.1",
     "lodash-es": "^4.17.11",
     "react": "^16.8.6",
     "react-color": "^2.17.3",
@@ -21,6 +22,8 @@
     "typescript": "3.4.5"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
