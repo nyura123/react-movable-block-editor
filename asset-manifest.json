@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/react-movable-block-grid-example/static/css/main.8db060b8.chunk.css",
-    "main.js": "/react-movable-block-grid-example/static/js/main.9dc2449f.chunk.js",
-    "main.js.map": "/react-movable-block-grid-example/static/js/main.9dc2449f.chunk.js.map",
-    "runtime~main.js": "/react-movable-block-grid-example/static/js/runtime~main.e182e9d7.js",
-    "runtime~main.js.map": "/react-movable-block-grid-example/static/js/runtime~main.e182e9d7.js.map",
-    "static/css/2.dc22652a.chunk.css": "/react-movable-block-grid-example/static/css/2.dc22652a.chunk.css",
-    "static/js/2.3e3c2ba7.chunk.js": "/react-movable-block-grid-example/static/js/2.3e3c2ba7.chunk.js",
-    "static/js/2.3e3c2ba7.chunk.js.map": "/react-movable-block-grid-example/static/js/2.3e3c2ba7.chunk.js.map",
-    "index.html": "/react-movable-block-grid-example/index.html",
-    "precache-manifest.1bc9e055fc765126855b39e35ff7d5e6.js": "/react-movable-block-grid-example/precache-manifest.1bc9e055fc765126855b39e35ff7d5e6.js",
-    "service-worker.js": "/react-movable-block-grid-example/service-worker.js",
-    "static/css/2.dc22652a.chunk.css.map": "/react-movable-block-grid-example/static/css/2.dc22652a.chunk.css.map",
-    "static/css/main.8db060b8.chunk.css.map": "/react-movable-block-grid-example/static/css/main.8db060b8.chunk.css.map"
+    "main.css": "/react-movable-block-editor/static/css/main.19393e92.chunk.css",
+    "main.js": "/react-movable-block-editor/static/js/main.47f30f90.chunk.js",
+    "main.js.map": "/react-movable-block-editor/static/js/main.47f30f90.chunk.js.map",
+    "runtime~main.js": "/react-movable-block-editor/static/js/runtime~main.913afbfa.js",
+    "runtime~main.js.map": "/react-movable-block-editor/static/js/runtime~main.913afbfa.js.map",
+    "static/css/2.3e300142.chunk.css": "/react-movable-block-editor/static/css/2.3e300142.chunk.css",
+    "static/js/2.6eaff42b.chunk.js": "/react-movable-block-editor/static/js/2.6eaff42b.chunk.js",
+    "static/js/2.6eaff42b.chunk.js.map": "/react-movable-block-editor/static/js/2.6eaff42b.chunk.js.map",
+    "index.html": "/react-movable-block-editor/index.html",
+    "precache-manifest.9133614fe182994595b00edaccb054e3.js": "/react-movable-block-editor/precache-manifest.9133614fe182994595b00edaccb054e3.js",
+    "service-worker.js": "/react-movable-block-editor/service-worker.js",
+    "static/css/2.3e300142.chunk.css.map": "/react-movable-block-editor/static/css/2.3e300142.chunk.css.map",
+    "static/css/main.19393e92.chunk.css.map": "/react-movable-block-editor/static/css/main.19393e92.chunk.css.map"
   }
 }
