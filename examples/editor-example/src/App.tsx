@@ -1,6 +1,5 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import { makeStyles } from '@material-ui/styles';

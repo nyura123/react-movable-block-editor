@@ -6,13 +6,12 @@ import {
   defaultRenderEditBlock,
   defaultRenderPreviewBlock,
   update,
+  BlockProps,
   onDragStart,
   PreviewProps,
 } from 'react-movable-block-editor';
 import 'react-movable-block-editor/css/drag.css';
 import 'react-resizable/css/styles.css';
-import { CustomEditorToolBar } from './CustomEditorToolBar';
-import { BlockProps } from '../../dist/components/blocks/BlockProps';
 
 // Optional: code below is for custom blocks
 
