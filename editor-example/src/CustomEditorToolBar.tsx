@@ -3,10 +3,13 @@ import React, { useState } from 'react';
 import {
   BlockBreadCrumbs,
   BlockEditorControlUIProps,
+  newBlockId,
+  placeNodeInParent,
   addCol,
   addRow,
   move,
   BlockEditorValue,
+  BlockNode,
 } from 'react-movable-block-editor';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -55,7 +58,7 @@ export interface BlockEditorControlDefaultUIState {
 }
 
 // Create our own menu bar
-export const MyEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
+export const CustomEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
   props: BlockEditorControlUIProps
 ) => {
   const [selectedMenu, setSelectedMenu] = useState<MenuType | null>(null);
@@ -96,7 +99,7 @@ export const MyEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
 
   const {
     breadCrumbsProps,
-    value: { byId, rootNodeId, focusedNodeId },
+    value: { byId, focusedNodeId },
   } = props;
 
   const focusedNode = focusedNodeId ? byId[focusedNodeId] : null;
@@ -196,6 +199,15 @@ export const MyEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
           }}
         >
           + Table
+        </Button>
+        <Button
+          aria-label="add image"
+          className={btnCls}
+          onClick={() => {
+            props.onChange(addInput(props.value, props.value.focusedNodeId));
+          }}
+        >
+          + Input
         </Button>
       </div>
 
@@ -346,6 +358,31 @@ function flipToFront(value: BlockEditorValue, nodeId: string | null) {
   });
 }
 
+function addInput(value: BlockEditorValue, parentId: string | null) {
+  const { byId } = value;
+  const parentNode = parentId ? byId[parentId] : null;
+  if (!parentId || !parentNode) {
+    alert('Please select node to add input to');
+    return value;
+  }
+  let newNodeId = newBlockId(byId, 'input');
+
+  const input: BlockNode = {
+    type: 'custom',
+    customType: 'input',
+    height: 50,
+    width: 100,
+    id: newNodeId,
+    name: newNodeId,
+    childrenIds: [],
+  };
+  return {
+    ...value,
+    byId: placeNodeInParent(byId, input, parentId),
+    focusedNodeId: value.focusedNodeId || input.id,
+  };
+}
+
 function addTable(value: BlockEditorValue, parentId: string | null) {
   if (!parentId) {
     alert('Please select node to add table to');
@@ -379,8 +416,6 @@ function addTable(value: BlockEditorValue, parentId: string | null) {
     const { value: newValue, createdBlock: row } = addRow(value, {
       height: height / numRows,
       parentId: tableId,
-      // borderWidth: 0,
-      // borderBottomWidth: i === 0 ? 1 : 0,
     });
     if (!row) break;
     value = newValue;
@@ -389,11 +424,6 @@ function addTable(value: BlockEditorValue, parentId: string | null) {
         parentId: row.id,
         height: row.height,
         width: row.width / numCols,
-        // borderWidth: 0,
-        // borderRightWidth: j === numCols - 1 ? 0 : 1,
-        // display: 'flex',
-        // flexDirection: 'column',
-        // justifyContent: 'center',
       });
       if (!col) break;
       value = newValue;

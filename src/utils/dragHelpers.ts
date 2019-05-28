@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BlockNode } from '../data';
+import { BlockNode, BlockNodeType } from '../data';
 import { BlockEditorValue } from '../components/editor/BlockEditorProps';
 import { move } from '../components/editor/helpers';
 
@@ -8,18 +8,25 @@ export interface DraggedInfo {
   startTop: number;
 }
 
-export function parseTypes(types: Array<string>) {
+export function parseTypes(
+  types: Array<string>
+): {
+  draggedNodeId: string;
+  draggedNodeType: BlockNodeType | null;
+} {
   const draggedNodeIds = types.filter(t => t.indexOf('draggednodeid:') === 0);
   const draggedNodeTypes = types.filter(
     t => t.indexOf('draggednodetype:') === 0
   );
 
   if (draggedNodeIds.length !== 1 || draggedNodeTypes.length !== 1) {
-    return { draggedNodeId: 'notanode', draggedNodeType: 'invalidnodetype' };
+    return { draggedNodeId: 'notanode', draggedNodeType: null };
   }
 
   const draggedNodeId = draggedNodeIds[0].slice('draggednodeid:'.length);
-  const draggedNodeType = draggedNodeTypes[0].slice('draggednodetype:'.length);
+  const draggedNodeType = draggedNodeTypes[0].slice(
+    'draggednodetype:'.length
+  ) as BlockNodeType;
 
   return { draggedNodeId, draggedNodeType };
 }

@@ -24,7 +24,8 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
       draggedNodeType === 'col' ||
       draggedNodeType === 'markdown' ||
       draggedNodeType === 'image' ||
-      draggedNodeType === 'layer'
+      draggedNodeType === 'layer' ||
+      draggedNodeType === 'custom'
     );
   };
 

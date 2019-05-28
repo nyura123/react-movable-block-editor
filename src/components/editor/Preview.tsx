@@ -34,8 +34,17 @@ const copyBasicProps = (node: BlockNode) => ({
     : node.borderStyle || undefined,
 });
 
-export const Preview = (props: { byId: ById; node: BlockNode }) => {
-  const { node, byId } = props;
+export interface PreviewProps {
+  byId: ById;
+  node: BlockNode;
+  renderPreviewBlock: (props: PreviewProps) => any;
+}
+
+export const Preview = ({
+  byId,
+  node,
+  renderPreviewBlock = defaultRenderPreviewBlock,
+}: PreviewProps) => {
   if (!node) return null;
 
   switch (node.type) {
@@ -76,7 +85,11 @@ export const Preview = (props: { byId: ById; node: BlockNode }) => {
                   left: childNode.left || 0,
                 }}
               >
-                <Preview byId={byId} node={byId[id]} />
+                {renderPreviewBlock({
+                  byId,
+                  node: byId[id],
+                  renderPreviewBlock,
+                })}
               </div>
             );
           })}
@@ -102,9 +115,13 @@ export const Preview = (props: { byId: ById; node: BlockNode }) => {
           }}
         >
           {/* <div>{node.name}</div> */}
-          {node.childrenIds.map(id => (
-            <Preview key={'prev_' + id} byId={byId} node={byId[id]} />
-          ))}
+          {node.childrenIds.map(id =>
+            renderPreviewBlock({
+              byId,
+              node: byId[id],
+              renderPreviewBlock,
+            })
+          )}
         </div>
       );
     case 'row':
@@ -120,10 +137,27 @@ export const Preview = (props: { byId: ById; node: BlockNode }) => {
             flexDirection: 'row',
           }}
         >
-          {node.childrenIds.map(id => (
-            <Preview key={'prev_' + id} byId={byId} node={byId[id]} />
-          ))}
+          {node.childrenIds.map(id =>
+            renderPreviewBlock({
+              byId,
+              node: byId[id],
+              renderPreviewBlock,
+            })
+          )}
         </div>
       );
   }
 };
+
+export const defaultRenderPreviewBlock = ({
+  byId,
+  node,
+  renderPreviewBlock,
+}: PreviewProps) => (
+  <Preview
+    key={'node_' + node.id}
+    node={node}
+    byId={byId}
+    renderPreviewBlock={renderPreviewBlock}
+  />
+);

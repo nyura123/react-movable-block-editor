@@ -1,8 +1,15 @@
-export type BlockNodeType = 'row' | 'col' | 'markdown' | 'image' | 'layer';
+export type BlockNodeType =
+  | 'row'
+  | 'col'
+  | 'markdown'
+  | 'image'
+  | 'layer'
+  | 'custom';
 
 export interface BlockNode {
   id: string;
   type: BlockNodeType;
+  customType?: string;
   name: string;
   value?: any;
   backgroundColor?: string | null;

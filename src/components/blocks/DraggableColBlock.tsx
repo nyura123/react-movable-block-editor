@@ -35,7 +35,8 @@ export class DraggableColBlock extends React.Component<
       draggedNodeType === 'row' ||
       draggedNodeType === 'markdown' ||
       draggedNodeType === 'image' ||
-      draggedNodeType === 'layer'
+      draggedNodeType === 'layer' ||
+      draggedNodeType === 'custom'
     );
   };
 

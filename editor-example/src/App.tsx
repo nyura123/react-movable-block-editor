@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -16,7 +16,10 @@ import {
 } from 'react-movable-block-editor';
 import 'react-movable-block-editor/css/drag.css';
 import 'react-resizable/css/styles.css';
-import { MyEditorToolBar } from './EditorToolBar';
+
+// Optional
+import { CustomEditorToolBar } from './CustomEditorToolBar';
+import { myRenderEditBlock, myRenderPreviewBlock } from './CustomBlocks';
 
 // optional: customize BreadCrumbs classes
 const useStyles = makeStyles((theme: any) => ({
@@ -27,10 +30,6 @@ const useStyles = makeStyles((theme: any) => ({
     left: '20%',
     width: '60%',
     padding: 20,
-    // backgroundColor: theme.palette.background.paper,
-    // boxShadow: theme.shadows[5],
-    // padding: theme.spacing(4),
-    // outline: 'none',
   },
   breadcrumbNav: {
     display: 'flex',
@@ -70,6 +69,28 @@ const App: React.FC = () => {
         width: 510,
         height: 310,
         childrenIds: ['title', 'subheading', 'content', 'image1', 'row1'],
+      },
+      input1: {
+        id: 'input1',
+        type: 'custom',
+        customType: 'input',
+        name: 'input1',
+        value: 'First Name',
+        parentId: 'row1',
+        width: 100,
+        height: 50,
+        childrenIds: [],
+      },
+      input2: {
+        id: 'input2',
+        type: 'custom',
+        customType: 'input',
+        name: 'input2',
+        parentId: 'row1',
+        value: 'Last Name',
+        width: 100,
+        height: 50,
+        childrenIds: [],
       },
       title: {
         id: 'title',
@@ -130,7 +151,7 @@ const App: React.FC = () => {
         height: 40,
         top: 230,
         left: 220,
-        childrenIds: [],
+        childrenIds: ['input1', 'input2'],
       },
     },
     rootNodeId: 'container1',
@@ -157,7 +178,7 @@ const App: React.FC = () => {
       <BlockEditorControl
         value={editorState}
         onChange={v => (console.log('VAL', v) as any) || setEditorState(v)}
-        UiComponent={MyEditorToolBar}
+        UiComponent={CustomEditorToolBar}
         controlUiProps={{
           breadCrumbsProps: {
             navClassName: classes.breadcrumbNav,
@@ -169,7 +190,11 @@ const App: React.FC = () => {
       <Grid container spacing={3}>
         <Grid item md={6}>
           <div style={{ marginLeft: 10 }}>
-            <BlockEditor value={editorState} onChange={setEditorState} />
+            <BlockEditor
+              renderEditBlock={myRenderEditBlock}
+              value={editorState}
+              onChange={setEditorState}
+            />
           </div>
         </Grid>
         <Grid item md={6}>
@@ -178,6 +203,7 @@ const App: React.FC = () => {
           >
             <Preview
               byId={editorState.byId}
+              renderPreviewBlock={myRenderPreviewBlock}
               node={editorState.byId[editorState.rootNodeId]}
             />
           </div>
