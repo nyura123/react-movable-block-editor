@@ -37,7 +37,8 @@
     "react": ">=16",
     "react-color": "^2.17.3",
     "react-markdown": "^4.0.8",
-    "react-resizable": "^1.8.0"
+    "react-resizable": "^1.8.0",
+    "lodash-es": "^4.17.11"
   },
   "husky": {
     "hooks": {
@@ -52,6 +53,7 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.13",
+    "@types/lodash-es": "^4.17.3",
     "@types/react": "^16.8.18",
     "@types/react-color": "^3.0.0",
     "@types/react-dom": "^16.8.4",

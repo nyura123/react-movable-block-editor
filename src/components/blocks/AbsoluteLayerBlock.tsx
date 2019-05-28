@@ -112,7 +112,7 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
           width: node.width,
           height: node.height,
           backgroundColor: node.backgroundColor || '#f5f5f5a3',
-          padding: 5,
+          // padding: 5,
           borderRadius: 3,
         }}
       >

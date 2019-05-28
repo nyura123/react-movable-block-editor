@@ -6,12 +6,13 @@ import {
   placeNodeInParent,
 } from '../../data';
 import { BlockEditorValue } from './BlockEditorProps';
+const { cloneDeep } = require('lodash-es');
 
 export function deepCopy(byId: ById, node: BlockNode): BlockNode {
   if (!node) return node;
   return {
     ...node,
-    value: typeof node.value === 'object' ? { ...node.value } : node.value,
+    value: cloneDeep(node.value),
     childrenIds: [...node.childrenIds],
     children: node.childrenIds.map(id => deepCopy(byId, byId[id])),
   };
@@ -19,11 +20,11 @@ export function deepCopy(byId: ById, node: BlockNode): BlockNode {
 
 export function paste(value: BlockEditorValue): BlockEditorValue {
   const { byId } = value;
-  let { copiedNode } = value;
+  let { copiedNode } = value ? value : { copiedNode: null };
   if (!copiedNode) return value;
 
   // support pasting same node multiple times - ensure childrenIds in each copy point to different arrays
-  copiedNode = deepCopy(byId, copiedNode);
+  copiedNode = cloneDeep(copiedNode) as BlockNode;
 
   const { byId: newById } = pasteChild(byId, copiedNode);
   // add copied node to parent

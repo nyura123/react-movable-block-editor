@@ -146,6 +146,8 @@ export const Preview = ({
           )}
         </div>
       );
+    case 'custom':
+      return null;
   }
 };
 
