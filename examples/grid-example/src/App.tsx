@@ -51,6 +51,8 @@ const App: React.FC = () => {
     copiedNode: null,
     focusedNodeId: null,
     rootNodeId: 'container1',
+    undoStack: [],
+    redoStack: [],
     byId: {
       container1: {
         id: 'container1',

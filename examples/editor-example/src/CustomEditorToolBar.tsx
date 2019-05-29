@@ -236,6 +236,12 @@ export const CustomEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
         >
           + Input
         </Button>
+        <Button aria-label="undo" className={btnCls} onClick={props.undo}>
+          Undo
+        </Button>
+        <Button aria-label="redo" className={btnCls} onClick={props.redo}>
+          Redo
+        </Button>
       </div>
 
       {focusedNode && (

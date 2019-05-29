@@ -179,6 +179,13 @@ export const CustomEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
         >
           + Image
         </Button>
+
+        <Button aria-label="undo" className={btnCls} onClick={props.undo}>
+          Undo
+        </Button>
+        <Button aria-label="redo" className={btnCls} onClick={props.redo}>
+          Redo
+        </Button>
       </div>
 
       {focusedNode && (
@@ -378,13 +385,15 @@ export function addGrid(
       value = newValue2;
 
       // Slot for our content to accept sticky content...
-      const { value: newValue3, createdBlock: layer } = addLayer(value, {
-        parentId: content.id,
-        width: 50,
-        height: 50,
-      });
-      if (!layer) break;
-      value = newValue3;
+      if (i === 0 && j === 0) {
+        const { value: newValue3, createdBlock: layer } = addLayer(value, {
+          parentId: content.id,
+          width: 120,
+          height: 120,
+        });
+        if (!layer) break;
+        value = newValue3;
+      }
     }
   }
   return value;
