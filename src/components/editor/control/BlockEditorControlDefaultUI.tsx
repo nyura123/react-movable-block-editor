@@ -34,6 +34,8 @@ export interface BlockEditorControlUIProps {
   addMarkDown: () => any;
   copyFocused: () => any;
   paste: () => any;
+  undo: () => any;
+  redo: () => any;
   focusNode: (nodeId: string, focus: boolean) => any;
   removeFocused: () => any;
   updateBlock: (nodeId: string, propsToUpdate: Partial<BlockNode>) => any;
@@ -176,6 +178,12 @@ export class BlockEditorControlDefaultUI extends React.Component<
             }}
           >
             + Table
+          </button>
+          <button aria-label="undo" className={btnCls} onClick={props.undo}>
+            Undo
+          </button>
+          <button aria-label="redo" className={btnCls} onClick={props.redo}>
+            Redo
           </button>
         </div>
 

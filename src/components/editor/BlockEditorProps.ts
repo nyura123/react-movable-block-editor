@@ -7,6 +7,8 @@ export interface BlockEditorValue {
   rootNodeId: string;
   focusedNodeId: string | null;
   copiedNode: BlockNode | null;
+  undoStack: Array<ById>;
+  redoStack: Array<ById>;
 }
 
 export interface BlockEditorProps {

@@ -142,6 +142,40 @@ export class BlockEditorControl extends React.Component<
     this.props.onChange(paste(this.props.value));
   };
 
+  undo = () => {
+    const {
+      value: { byId, undoStack, redoStack },
+    } = this.props;
+    if (undoStack.length > 0) {
+      const newById = undoStack[0];
+      const newRedoStack = [byId, ...redoStack];
+      const newUndoStack = undoStack.slice(1);
+      this.props.onChange({
+        ...this.props.value,
+        byId: newById,
+        undoStack: newUndoStack,
+        redoStack: newRedoStack,
+      });
+    }
+  };
+
+  redo = () => {
+    const {
+      value: { byId, undoStack, redoStack },
+    } = this.props;
+    if (redoStack.length > 0) {
+      const newById = redoStack[0];
+      const newUndoStack = [byId, ...undoStack];
+      const newRedoStack = redoStack.slice(1);
+      this.props.onChange({
+        ...this.props.value,
+        byId: newById,
+        undoStack: newUndoStack,
+        redoStack: newRedoStack,
+      });
+    }
+  };
+
   render() {
     const { UiComponent, onChange, value, controlUiProps } = this.props;
 
@@ -162,6 +196,8 @@ export class BlockEditorControl extends React.Component<
         }
         removeFocused={this.removeFocused}
         updateBlock={this.updateBlock}
+        undo={this.undo}
+        redo={this.redo}
         {...controlUiProps}
       />
     );

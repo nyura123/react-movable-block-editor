@@ -10,6 +10,8 @@ export interface BlockEditorState {
   value: BlockEditorValue;
 }
 
+const maxUndoStack = 10;
+
 export class BlockEditor extends React.Component<
   BlockEditorProps,
   BlockEditorState
@@ -41,6 +43,22 @@ export class BlockEditor extends React.Component<
       this.props.value !== this.state.value
     ) {
       this.setState({ value: this.props.value });
+    }
+
+    // make the last byId reachable through undo
+    if (
+      this.state.value.byId !== prevState.value.byId &&
+      this.state.value.undoStack === prevState.value.undoStack
+    ) {
+      this.setState({
+        value: {
+          ...this.state.value,
+          undoStack: [
+            prevState.value.byId,
+            ...this.state.value.undoStack,
+          ].slice(-maxUndoStack),
+        },
+      });
     }
   }
 
