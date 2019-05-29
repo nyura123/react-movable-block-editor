@@ -7,6 +7,8 @@ describe('copy-paste', () => {
       copiedNode: null,
       rootNodeId: 'container1',
       focusedNodeId: 'layer1',
+      undoStack: [],
+      redoStack: [],
       byId: {
         container1: {
           id: 'container1',
@@ -64,7 +66,8 @@ describe('copy-paste', () => {
     expect(pastedValue).toEqual({
       rootNodeId: 'container1',
       focusedNodeId: 'layer1',
-
+      undoStack: [],
+      redoStack: [],
       copiedNode: {
         children: [
           {

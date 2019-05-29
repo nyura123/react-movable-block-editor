@@ -10,6 +10,8 @@ describe('it', () => {
         value={{
           copiedNode: null,
           focusedNodeId: 'row1',
+          undoStack: [],
+          redoStack: [],
           byId: {
             container1: {
               id: 'container1',
