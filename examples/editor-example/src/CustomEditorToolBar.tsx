@@ -395,7 +395,7 @@ function addInput(value: BlockEditorValue, parentId: string | null) {
   const input: BlockNode = {
     type: 'custom',
     customType: 'input',
-    height: 50,
+    height: 40,
     width: 100,
     id: newNodeId,
     name: newNodeId,

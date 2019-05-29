@@ -134,5 +134,10 @@ const MyEditInputBlock = (props: BlockProps) => {
 };
 
 const MyPreviewInputBlock = (props: PreviewProps) => {
-  return <input placeholder={props.node.value} />;
+  return (
+    <input
+      style={{ width: props.node.width, height: props.node.height }}
+      placeholder={props.node.value}
+    />
+  );
 };

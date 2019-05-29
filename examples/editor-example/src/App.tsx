@@ -77,7 +77,7 @@ const App: React.FC = () => {
         value: 'First Name',
         parentId: 'row1',
         width: 100,
-        height: 50,
+        height: 40,
         childrenIds: [],
       },
       input2: {
@@ -88,7 +88,7 @@ const App: React.FC = () => {
         parentId: 'row1',
         value: 'Last Name',
         width: 100,
-        height: 50,
+        height: 40,
         childrenIds: [],
       },
       title: {
