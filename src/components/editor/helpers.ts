@@ -6,7 +6,7 @@ import {
   placeNodeInParent,
 } from '../../data';
 import { BlockEditorValue } from './BlockEditorProps';
-const { cloneDeep } = require('lodash-es');
+const { cloneDeep } = require('lodash');
 
 export function deepCopy(byId: ById, node: BlockNode): BlockNode {
   if (!node) return node;
