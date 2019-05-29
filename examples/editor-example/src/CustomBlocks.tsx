@@ -36,6 +36,7 @@ function renderCustomPreviewBlock(props: PreviewProps) {
     case 'input':
       return (
         <MyPreviewInputBlock
+          key={props.node.id}
           node={props.node}
           renderPreviewBlock={props.renderPreviewBlock}
           byId={props.byId}

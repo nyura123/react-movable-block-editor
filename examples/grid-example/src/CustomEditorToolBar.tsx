@@ -19,6 +19,7 @@ import ArrowRightIcon from '@material-ui/icons/ArrowForward';
 import ArrowUpIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownIcon from '@material-ui/icons/ArrowDownward';
 import Tooltip from '@material-ui/core/Tooltip';
+import TransparentPng from './transparent.png';
 
 import { SketchPicker } from 'react-color';
 
@@ -49,21 +50,26 @@ export interface BlockEditorControlDefaultUIState {
 export const CustomEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
   props: BlockEditorControlUIProps
 ) => {
-  const [selectedMenu, setSelectedMenu] = useState<MenuType | null>(null);
+  const {
+    breadCrumbsProps,
+    value: { byId, focusedNodeId },
+  } = props;
 
+  const selectedNode = focusedNodeId ? byId[focusedNodeId] : null;
+
+  const [selectedMenu, setSelectedMenu] = useState<MenuType | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(
+    selectedNode ? selectedNode.color : undefined
+  );
   const classes = useStyles();
+
+  if (!focusedNodeId) return null;
 
   const toggleMenu = (menu: MenuType) => {
     setSelectedMenu(selectedMenu === menu ? null : menu);
   };
 
   const renderColorMenuItem = (which: 'color' | 'backgroundColor') => {
-    const {
-      value: { byId, focusedNodeId },
-    } = props;
-
-    if (!focusedNodeId) return;
-    const selectedNode = focusedNodeId ? byId[focusedNodeId] : null;
     return (
       <React.Fragment>
         <ColorButton
@@ -71,12 +77,37 @@ export const CustomEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
           color={selectedNode[which]}
         />
         {selectedMenu === which && (
-          <div style={{ position: 'absolute', zIndex: 100 }}>
-            <SketchPicker
-              color={selectedNode[which] || undefined}
-              onChange={({ hex }) => {
-                props.updateBlock(focusedNodeId, { [which]: hex });
+          <div
+            style={{
+              position: 'absolute',
+              zIndex: 100,
+              backgroundColor: 'white',
+            }}
+          >
+            <Button
+              size="small"
+              color="secondary"
+              onClick={() => {
+                props.updateBlock(focusedNodeId, { [which]: undefined });
                 toggleMenu(which);
+              }}
+            >
+              Clear
+            </Button>
+            <Button
+              size="small"
+              color="primary"
+              onClick={() => {
+                toggleMenu(which);
+                props.updateBlock(focusedNodeId, { [which]: selectedColor });
+              }}
+            >
+              Done
+            </Button>
+            <SketchPicker
+              color={selectedColor}
+              onChangeComplete={({ hex }) => {
+                setSelectedColor(hex);
               }}
             />
           </div>
@@ -84,11 +115,6 @@ export const CustomEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
       </React.Fragment>
     );
   };
-
-  const {
-    breadCrumbsProps,
-    value: { byId, focusedNodeId },
-  } = props;
 
   const focusedNode = focusedNodeId ? byId[focusedNodeId] : null;
 
@@ -239,30 +265,28 @@ export const CustomEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
 };
 
 const ColorButton = (props: { color: string; onClick: () => any }) => (
-  <Button
-    size="small"
-    style={{
-      borderWidth: 1,
-      fontSize: 11,
-      borderStyle: 'solid',
-      justifyContent: 'flex-start',
-    }}
+  <div
     onClick={props.onClick}
+    style={{
+      display: 'inline-block',
+      marginTop: 10,
+      marginRight: 10,
+      borderWidth: 1,
+      borderRadius: 3,
+      borderStyle: 'solid',
+      width: 20,
+      height: 20,
+      backgroundColor: props.color || undefined,
+    }}
   >
-    <div style={{ display: 'flex' }}>
-      <div
-        style={{
-          borderWidth: 1,
-          borderRadius: 3,
-          borderStyle: 'solid',
-          width: 20,
-          height: 20,
-          backgroundColor: props.color || undefined,
-        }}
+    {props.color === undefined && (
+      <img
+        alt="transparent-color"
+        style={{ width: 20, height: 20 }}
+        src={TransparentPng}
       />
-      &nbsp;{!props.color ? 'none' : ''}
-    </div>
-  </Button>
+    )}
+  </div>
 );
 
 function flipToFront(value: BlockEditorValue, nodeId: string | null) {
