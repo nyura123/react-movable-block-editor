@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "d01c54e13b7c8d14757900519b1e48e0",
+    "revision": "9b51a050600a7cbc71a6f50d94f48359",
     "url": "/react-movable-block-editor/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/react-movable-block-editor/static/css/2.dc22652a.chunk.css"
   },
   {
-    "revision": "65f1ba6c45c6fba8b6ce",
+    "revision": "e1b9c6bff6ff97f17b9e",
     "url": "/react-movable-block-editor/static/css/main.3294ab67.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/react-movable-block-editor/static/js/2.44fe0477.chunk.js"
   },
   {
-    "revision": "65f1ba6c45c6fba8b6ce",
-    "url": "/react-movable-block-editor/static/js/main.fa2956e4.chunk.js"
+    "revision": "e1b9c6bff6ff97f17b9e",
+    "url": "/react-movable-block-editor/static/js/main.4c913888.chunk.js"
   },
   {
     "revision": "86548871e6efe405f746",
