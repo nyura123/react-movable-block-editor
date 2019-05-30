@@ -75,9 +75,9 @@ export interface MoveOpts {
 export function onDropped(
   types: Array<string>,
   targetNodeId: string,
-  opts: MoveOpts = {},
-  value: BlockEditorValue
+  opts: MoveOpts = {}
 ) {
   const { draggedNodeId } = parseTypes(types);
-  return move(value, draggedNodeId, targetNodeId, opts);
+  return (value: BlockEditorValue) =>
+    move(value, draggedNodeId, targetNodeId, opts);
 }

@@ -7,6 +7,7 @@ import { defaultRenderEditBlock } from '../blocks/ResizableBlock';
 import { BlockEditorProps, BlockEditorValue } from './BlockEditorProps';
 
 import { cloneDeep } from 'lodash';
+import { NodeOp } from '../blocks/BlockProps';
 
 export interface BlockEditorState {
   value: BlockEditorValue;
@@ -68,6 +69,17 @@ export class BlockEditor extends React.Component<
     }
   }
 
+  getNode = (id: string) => {
+    return this.state.value.byId[id];
+  };
+
+  onSendOp = (op: NodeOp) => {
+    const value = op(this.state.value);
+    this.setState({
+      value,
+    });
+  };
+
   render() {
     const { renderEditBlock } = this.props;
     const {
@@ -89,9 +101,10 @@ export class BlockEditor extends React.Component<
         <DraggableColBlock
           key={'col_' + rootNode.id}
           node={rootNode}
+          getNode={this.getNode}
+          sendOp={this.onSendOp}
+          focusedNodeId={this.state.value.focusedNodeId}
           renderEditBlock={renderEditBlock}
-          value={this.state.value}
-          onChange={value => this.setState({ value })}
         />
       </div>
     );

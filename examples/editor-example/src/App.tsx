@@ -151,7 +151,7 @@ const App: React.FC = () => {
         width: 240,
         height: 40,
         top: 230,
-        left: 220,
+        left: 180,
         childrenIds: ['input1', 'input2'],
       },
     },

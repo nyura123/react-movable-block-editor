@@ -31,11 +31,8 @@ export class DraggableRowBlock extends React.Component<
 
   canDrop = (types: Array<string>) => {
     const { draggedNodeType } = parseTypes(types);
-    const {
-      value: { byId },
-      node,
-    } = this.props;
-    const parentNode = node.parentId ? byId[node.parentId] : null;
+    const { getNode, node } = this.props;
+    const parentNode = node.parentId ? getNode(node.parentId) : null;
     return (
       // if our parent is a col, allow to place a sibling (row) before/after us
       (draggedNodeType === 'row' && parentNode && parentNode.type === 'col') ||
@@ -85,12 +82,11 @@ export class DraggableRowBlock extends React.Component<
           ? { beforeItemId: this.props.node.id }
           : { afterItemId: this.props.node.id };
 
-        this.props.onChange(
+        this.props.sendOp(
           onDropped(
             e.dataTransfer.types as Array<string>,
             this.props.node.parentId || '', // row over row -> place in parent container
-            { ...anchorOpts, isPlaceHolder },
-            this.props.value
+            { ...anchorOpts, isPlaceHolder }
           )
         );
       } else {
@@ -103,15 +99,14 @@ export class DraggableRowBlock extends React.Component<
             : { afterItemId: childrenIds[numChildren - 1] }
           : null;
 
-        this.props.onChange(
+        this.props.sendOp(
           onDropped(
             e.dataTransfer.types as Array<string>,
             this.props.node.id, // col or other over row -> place in this row
             {
               isPlaceHolder,
               ...anchorOpts,
-            }, // place in front of first child
-            this.props.value
+            } // place in front of first child
           )
         );
       }
@@ -164,7 +159,13 @@ export class DraggableRowBlock extends React.Component<
 
   render() {
     const { children: reactChildren } = this.props;
-    const { node, value, onChange, renderEditBlock } = this.props;
+    const {
+      node,
+      getNode,
+      sendOp,
+      renderEditBlock,
+      focusedNodeId,
+    } = this.props;
     const { wantToPlaceNext } = this.state;
 
     const firstChildPlaceholderWidth = 3;
@@ -218,7 +219,8 @@ export class DraggableRowBlock extends React.Component<
           {React.Children.count(reactChildren)
             ? reactChildren
             : node.childrenIds.map(id => {
-                const node = value.byId[id];
+                const node = getNode(id);
+                if (!node) return null;
                 const res = (
                   <div
                     className="drag-node"
@@ -234,9 +236,10 @@ export class DraggableRowBlock extends React.Component<
                   >
                     {renderEditBlock({
                       node,
+                      getNode,
+                      focusedNodeId,
                       renderEditBlock,
-                      value,
-                      onChange,
+                      sendOp,
                     })}
                   </div>
                 );

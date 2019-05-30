@@ -13,14 +13,21 @@ import { focusNode, update } from '../editor/helpers';
 export const ResizableBlock = (
   props: BlockProps & { width: number; height: number }
 ) => {
-  const { node, renderEditBlock, value, onChange, width, height } = props;
-  const { focusedNodeId } = value;
+  const {
+    node,
+    renderEditBlock,
+    getNode,
+    sendOp,
+    focusedNodeId,
+    width,
+    height,
+  } = props;
 
   return (
     <div
       onClick={e => {
         e.stopPropagation();
-        onChange(focusNode(value, node));
+        sendOp(value => focusNode(value, node));
       }}
       style={
         node.id === focusedNodeId
@@ -38,7 +45,7 @@ export const ResizableBlock = (
         }}
         onResize={(_event, { size }) => {
           const { width, height } = size;
-          onChange(update(value, node.id, { width, height }));
+          sendOp(value => update(value, node.id, { width, height }));
         }}
         // minConstraints={[20, 20]}
         // maxConstraints={[300, 300]}
@@ -48,37 +55,43 @@ export const ResizableBlock = (
             key={'col_' + node.id}
             node={node}
             renderEditBlock={renderEditBlock}
-            value={value}
-            onChange={onChange}
+            getNode={getNode}
+            sendOp={sendOp}
+            focusedNodeId={focusedNodeId}
           />
         ) : node.type === 'row' ? (
           <DraggableRowBlock
             key={'row_' + node.id}
             node={node}
             renderEditBlock={renderEditBlock}
-            value={value}
-            onChange={onChange}
+            getNode={getNode}
+            sendOp={sendOp}
+            focusedNodeId={focusedNodeId}
           />
         ) : node.type === 'markdown' ? (
           <MarkdownBlock
             node={node}
-            update={(nodeId, props) => onChange(update(value, nodeId, props))}
+            update={(nodeId, props) =>
+              sendOp(value => update(value, nodeId, props))
+            }
           />
         ) : node.type === 'layer' ? (
           <AbsoluteLayerBlock
             key={'layer_' + node.id}
             node={node}
             renderEditBlock={renderEditBlock}
-            value={value}
-            onChange={onChange}
+            getNode={getNode}
+            sendOp={sendOp}
+            focusedNodeId={focusedNodeId}
           />
         ) : (
           <ImageBlock
             key={'image_' + node.id}
             node={node}
             renderEditBlock={renderEditBlock}
-            value={value}
-            onChange={onChange}
+            getNode={getNode}
+            sendOp={sendOp}
+            focusedNodeId={focusedNodeId}
           />
         )}
       </ResizableBox>
@@ -89,15 +102,17 @@ export const ResizableBlock = (
 export const defaultRenderEditBlock = ({
   node,
   renderEditBlock,
-  value,
-  onChange,
+  getNode,
+  sendOp,
+  focusedNodeId,
 }: BlockProps) => (
   <ResizableBlock
     width={node.width}
     height={node.height}
     renderEditBlock={renderEditBlock}
     node={node}
-    value={value}
-    onChange={onChange}
+    getNode={getNode}
+    sendOp={sendOp}
+    focusedNodeId={focusedNodeId}
   />
 );

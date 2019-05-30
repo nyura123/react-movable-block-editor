@@ -29,11 +29,8 @@ export class DraggableColBlock extends React.Component<
   };
 
   canDrop = (types: Array<string>) => {
-    const {
-      value: { byId },
-      node,
-    } = this.props;
-    const parentNode = node.parentId ? byId[node.parentId] : null;
+    const { getNode, node } = this.props;
+    const parentNode = node.parentId ? getNode(node.parentId) : null;
     const { draggedNodeType } = parseTypes(types);
     return (
       // if our parent is a row, allow to place a sibling(col) before/after us
@@ -84,12 +81,11 @@ export class DraggableColBlock extends React.Component<
           ? { beforeItemId: this.props.node.id }
           : { afterItemId: this.props.node.id };
 
-        this.props.onChange(
+        this.props.sendOp(
           onDropped(
             e.dataTransfer.types as Array<string>,
             this.props.node.parentId || '', // col over col -> place in parent container
-            { ...anchorOpts, isPlaceHolder },
-            this.props.value
+            { ...anchorOpts, isPlaceHolder }
           )
         );
       } else {
@@ -102,15 +98,14 @@ export class DraggableColBlock extends React.Component<
             : { afterItemId: childrenIds[numChildren - 1] }
           : null;
 
-        this.props.onChange(
+        this.props.sendOp(
           onDropped(
             e.dataTransfer.types as Array<string>,
             this.props.node.id, // row or other over col -> place in this col
             {
               isPlaceHolder,
               ...anchorOpts,
-            }, // place in front of first child
-            this.props.value
+            } // place in front of first child
           )
         );
       }
@@ -161,23 +156,22 @@ export class DraggableColBlock extends React.Component<
   };
 
   renderChild(nodeId: string) {
-    const { value, onChange, renderEditBlock } = this.props;
-    const node = value.byId[nodeId];
+    const { getNode, sendOp, focusedNodeId, renderEditBlock } = this.props;
+    const node = getNode(nodeId);
+    if (!node) return null;
     return renderEditBlock({
       node,
       renderEditBlock,
-      value,
-      onChange,
+      focusedNodeId,
+      sendOp,
+      getNode,
     });
   }
 
   render() {
     const { children: reactChildren } = this.props;
 
-    const {
-      node,
-      value: { byId },
-    } = this.props;
+    const { node, getNode } = this.props;
     const { wantToPlaceNext } = this.state;
 
     const { childrenIds } = node;
@@ -238,7 +232,8 @@ export class DraggableColBlock extends React.Component<
           {React.Children.count(reactChildren)
             ? reactChildren
             : childrenIds.map(childId => {
-                const row = byId[childId];
+                const row = getNode(childId);
+                if (!row) return null;
                 const res = (
                   <div
                     className="drag-node"

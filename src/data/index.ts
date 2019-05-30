@@ -36,7 +36,7 @@ export interface BlockNode {
 
 export type ById = any;
 
-export function updateNode(byId: ById, newNode: BlockNode) {
+export function updateNode(byId: ById, newNode: BlockNode): ById {
   return { ...byId, [newNode.id]: newNode };
 }
 

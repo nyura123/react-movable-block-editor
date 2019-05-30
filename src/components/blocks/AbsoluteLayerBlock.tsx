@@ -52,7 +52,7 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
         e.dataTransfer.getData('text/plain')
       ) as DraggedInfo;
 
-      this.props.onChange(
+      this.props.sendOp(
         onDropped(
           e.dataTransfer.types as Array<string>,
           this.props.node.id,
@@ -64,8 +64,7 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
                   left: relativeDraggedPosition.left - draggedInfo.startLeft,
                 },
               }
-            : undefined,
-          this.props.value
+            : undefined
         )
       );
     }
@@ -76,13 +75,15 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
   };
 
   renderChild(nodeId: string) {
-    const { value, onChange, renderEditBlock } = this.props;
-    const node = value.byId[nodeId];
+    const { sendOp, getNode, focusedNodeId, renderEditBlock } = this.props;
+    const node = getNode(nodeId);
+    if (!node) return null;
     return renderEditBlock({
       node,
       renderEditBlock,
-      value,
-      onChange,
+      sendOp,
+      getNode,
+      focusedNodeId,
     });
   }
 
@@ -94,10 +95,7 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
   };
 
   render() {
-    const {
-      node,
-      value: { byId },
-    } = this.props;
+    const { node, getNode } = this.props;
     const { childrenIds } = node;
 
     return (
@@ -117,7 +115,8 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
         }}
       >
         {childrenIds.map(childId => {
-          const node = byId[childId];
+          const node = getNode(childId);
+          if (!node) return null;
           const res = (
             <div
               // className="drag-node"

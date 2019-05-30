@@ -110,17 +110,19 @@ function renderMyGridCell(props: BlockProps) {
 // Custom draggable cell block
 const MyContentCell = (props: BlockProps) => {
   const childId = props.node.childrenIds && props.node.childrenIds[0];
-  const childNode = childId ? props.value.byId[childId] : null;
+  const childNode = childId ? props.getNode(childId) : null;
+
+  // "sticky" area that accepts absolutely-positioned children
   let childLayer = childNode && childNode.type === 'layer' ? childNode : null;
 
   return (
     <div
       onClick={e => {
         e.stopPropagation();
-        props.onChange(focusNode(props.value, props.node));
+        props.sendOp(value => focusNode(value, props.node));
       }}
       style={
-        props.node.id === props.value.focusedNodeId
+        props.node.id === props.focusedNodeId
           ? { borderStyle: 'dashed', borderWidth: 1, borderColor: 'orange' }
           : {}
       }
@@ -135,15 +137,18 @@ const MyContentCell = (props: BlockProps) => {
         }}
         onResize={(_event, { size }) => {
           const { width, height } = size;
-          props.onChange(update(props.value, props.node.id, { width, height }));
+          props.sendOp(value =>
+            update(value, props.node.id, { width, height })
+          );
         }}
       >
         <DraggableColBlock
           key={'col_' + props.node.id}
           node={props.node}
           renderEditBlock={props.renderEditBlock}
-          value={props.value}
-          onChange={props.onChange}
+          sendOp={props.sendOp}
+          getNode={props.getNode}
+          focusedNodeId={props.focusedNodeId}
         >
           {childLayer && (
             <div
@@ -160,7 +165,7 @@ const MyContentCell = (props: BlockProps) => {
                 props.renderEditBlock({ ...props, node: childLayer })}
             </div>
           )}
-          {props.node.value ? props.node.value.text : 'no text'}{' '}
+          {props.node.value ? props.node.value.text : 'no text'}
         </DraggableColBlock>
       </ResizableBox>
     </div>
