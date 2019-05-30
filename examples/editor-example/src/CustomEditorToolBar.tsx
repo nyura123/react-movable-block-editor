@@ -76,13 +76,12 @@ export const CustomEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
   );
   const classes = useStyles();
 
-  if (!focusedNodeId) return null;
-
   const toggleMenu = (menu: MenuType) => {
     setSelectedMenu(selectedMenu === menu ? null : menu);
   };
 
   const renderColorMenuItem = (which: 'color' | 'backgroundColor') => {
+    if (!focusedNodeId) return null;
     return (
       <React.Fragment>
         <ColorButton
