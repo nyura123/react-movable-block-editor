@@ -31,13 +31,21 @@ export class DraggableRowBlock extends React.Component<
 
   canDrop = (types: Array<string>) => {
     const { draggedNodeType } = parseTypes(types);
+    const {
+      value: { byId },
+      node,
+    } = this.props;
+    const parentNode = node.parentId ? byId[node.parentId] : null;
     return (
-      draggedNodeType === 'col' ||
-      draggedNodeType === 'row' ||
-      draggedNodeType === 'markdown' ||
-      draggedNodeType === 'image' ||
-      draggedNodeType === 'layer' ||
-      draggedNodeType === 'custom'
+      // if our parent is a col, allow to place a sibling (row) before/after us
+      (draggedNodeType === 'row' && parentNode && parentNode.type === 'col') ||
+      // if we have children, we don't know if they can handle drops
+      (!this.props.children &&
+        (draggedNodeType === 'col' ||
+          draggedNodeType === 'markdown' ||
+          draggedNodeType === 'image' ||
+          draggedNodeType === 'layer' ||
+          draggedNodeType === 'custom'))
     );
   };
 
@@ -122,6 +130,8 @@ export class DraggableRowBlock extends React.Component<
     if (this.canDrop(e.dataTransfer.types as Array<string>)) {
       e.preventDefault();
       e.stopPropagation();
+    } else {
+      return;
     }
 
     if (draggedNodeType === 'row') {
@@ -153,6 +163,7 @@ export class DraggableRowBlock extends React.Component<
   };
 
   render() {
+    const { children: reactChildren } = this.props;
     const { node, value, onChange, renderEditBlock } = this.props;
     const { wantToPlaceNext } = this.state;
 
@@ -204,31 +215,33 @@ export class DraggableRowBlock extends React.Component<
               }}
             />
           )}
-          {node.childrenIds.map(id => {
-            const node = value.byId[id];
-            const res = (
-              <div
-                className="drag-node"
-                key={'node_' + node.id}
-                style={{
-                  position: 'absolute',
-                  width: node.width,
-                  height: node.height,
-                  top: 0,
-                  left: runningWidth,
-                }}
-              >
-                {renderEditBlock({
-                  node,
-                  renderEditBlock,
-                  value,
-                  onChange,
-                })}
-              </div>
-            );
-            runningWidth += node.width as number;
-            return res;
-          })}
+          {React.Children.count(reactChildren)
+            ? reactChildren
+            : node.childrenIds.map(id => {
+                const node = value.byId[id];
+                const res = (
+                  <div
+                    className="drag-node"
+                    key={'node_' + node.id}
+                    style={{
+                      position: 'absolute',
+                      width: node.width,
+                      height: node.height,
+                      top: 0,
+                      left: runningWidth,
+                    }}
+                  >
+                    {renderEditBlock({
+                      node,
+                      renderEditBlock,
+                      value,
+                      onChange,
+                    })}
+                  </div>
+                );
+                runningWidth += node.width as number;
+                return res;
+              })}
           {wantToPlaceNext === 'lastChild' && (
             <div
               style={{

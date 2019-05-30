@@ -6,11 +6,11 @@ import { makeStyles } from '@material-ui/styles';
 
 import {
   BlockEditor,
-  onDragStart,
   focusNode,
   update,
   BlockEditorControl,
   defaultRenderEditBlock,
+  DraggableColBlock,
   BlockEditorValue,
   BlockProps,
 } from 'react-movable-block-editor';
@@ -109,77 +109,61 @@ function renderMyGridCell(props: BlockProps) {
 
 // Custom draggable cell block
 const MyContentCell = (props: BlockProps) => {
-  const selfRef = useRef(null);
-
-  const getBoundingRect = () => {
-    return selfRef &&
-      selfRef.current &&
-      (selfRef.current as any).getBoundingClientRect
-      ? (selfRef.current as any).getBoundingClientRect()
-      : null;
-  };
-
   const childId = props.node.childrenIds && props.node.childrenIds[0];
   const childNode = childId ? props.value.byId[childId] : null;
   let childLayer = childNode && childNode.type === 'layer' ? childNode : null;
 
   return (
-    <ResizableBox
-      className="box"
-      width={props.node.width}
-      height={props.node.height}
-      onResizeStart={event => {
-        event.preventDefault();
-        event.stopPropagation();
+    <div
+      onClick={e => {
+        e.stopPropagation();
+        props.onChange(focusNode(props.value, props.node));
       }}
-      onResize={(_event, { size }) => {
-        const { width, height } = size;
-        props.onChange(update(props.value, props.node.id, { width, height }));
-      }}
+      style={
+        props.node.id === props.value.focusedNodeId
+          ? { borderStyle: 'dashed', borderWidth: 1, borderColor: 'orange' }
+          : {}
+      }
     >
-      <div
-        ref={selfRef}
-        draggable
-        onDragStart={e => onDragStart(e, props.node, getBoundingRect)}
-        onClick={e => {
-          e.stopPropagation();
-          props.onChange(focusNode(props.value, props.node, true));
+      <ResizableBox
+        className="box"
+        width={props.node.width}
+        height={props.node.height}
+        onResizeStart={event => {
+          event.preventDefault();
+          event.stopPropagation();
         }}
-        style={{
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          backgroundColor: props.node.backgroundColor || undefined,
-          width: props.node.width,
-          height: props.node.height,
-          ...(props.value.focusedNodeId === props.node.id
-            ? {
-                borderStyle: 'dashed',
-                borderWidth: 1,
-                borderColor: 'orange',
-              }
-            : {}),
+        onResize={(_event, { size }) => {
+          const { width, height } = size;
+          props.onChange(update(props.value, props.node.id, { width, height }));
         }}
       >
-        {childLayer && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: childLayer.width,
-              height: childLayer.height,
-              backgroundColor: 'black',
-            }}
-          >
-            {childLayer &&
-              props.renderEditBlock({ ...props, node: childLayer })}
-          </div>
-        )}
-        {props.node.value ? props.node.value.text : 'no text'}{' '}
-      </div>
-    </ResizableBox>
+        <DraggableColBlock
+          key={'col_' + props.node.id}
+          node={props.node}
+          renderEditBlock={props.renderEditBlock}
+          value={props.value}
+          onChange={props.onChange}
+        >
+          {childLayer && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: childLayer.width,
+                height: childLayer.height,
+                backgroundColor: 'black',
+              }}
+            >
+              {childLayer &&
+                props.renderEditBlock({ ...props, node: childLayer })}
+            </div>
+          )}
+          {props.node.value ? props.node.value.text : 'no text'}{' '}
+        </DraggableColBlock>
+      </ResizableBox>
+    </div>
   );
 };
 
