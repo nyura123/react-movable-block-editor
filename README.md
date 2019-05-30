@@ -16,7 +16,16 @@ The output is an object that can be serialized to json, React, html.
 
 ### Usage:
 
-```
+```js
+
+import {
+  BlockEditor,
+  Preview,
+  BlockEditorControl,
+  BlockEditorValue,
+} from 'react-movable-block-editor';
+import 'react-movable-block-editor/css/drag.css';
+import 'react-resizable/css/styles.css';
 
 const App: React.FC = () => {
   const [editorState, setEditorState] = useState<BlockEditorValue>({
