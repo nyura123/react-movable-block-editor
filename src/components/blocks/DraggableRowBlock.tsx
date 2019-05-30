@@ -228,7 +228,8 @@ export class DraggableRowBlock extends React.Component<
                       width: node.width,
                       height: node.height,
                       top: 0,
-                      left: runningWidth,
+                      left: 0,
+                      transform: `translate(${runningWidth}px,0)`,
                     }}
                   >
                     {renderEditBlock({
@@ -246,7 +247,9 @@ export class DraggableRowBlock extends React.Component<
             <div
               style={{
                 position: 'absolute',
-                left: runningWidth,
+                top: 0,
+                left: 0,
+                transform: `translate(${runningWidth}px,0)`,
                 height: '100%',
                 width: firstChildPlaceholderWidth,
                 backgroundColor: 'orange',

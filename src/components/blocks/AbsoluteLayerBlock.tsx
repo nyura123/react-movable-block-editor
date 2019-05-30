@@ -126,8 +126,9 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
                 position: 'absolute',
                 width: node.width,
                 height: node.height,
-                top: node.top,
-                left: node.left,
+                top: 0,
+                left: 0,
+                transform: `translate(${node.left}px,${node.top}px)`,
               }}
             >
               {this.renderChild(childId)}

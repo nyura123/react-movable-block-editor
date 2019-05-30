@@ -247,8 +247,9 @@ export class DraggableColBlock extends React.Component<
                       position: 'absolute',
                       width: row.width,
                       height: row.height,
-                      top: runningHeight,
+                      top: 0,
                       left: 0,
+                      transform: `translate(0,${runningHeight}px)`,
                     }}
                   >
                     {this.renderChild(childId)}
@@ -260,7 +261,9 @@ export class DraggableColBlock extends React.Component<
           {wantToPlaceNext === 'lastChild' && (
             <div
               style={{
-                top: runningHeight,
+                top: 0,
+                left: 0,
+                transform: `translate(0,${runningHeight}px)`,
                 position: 'absolute',
                 height: 10,
                 width: '100%',
