@@ -37,7 +37,7 @@ const copyBasicProps = (node: BlockNode) => ({
 export interface PreviewProps {
   byId: ById;
   node: BlockNode;
-  renderPreviewBlock: (props: PreviewProps) => any;
+  renderPreviewBlock?: (props: PreviewProps) => any;
 }
 
 export const Preview = ({

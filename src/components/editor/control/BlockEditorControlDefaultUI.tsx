@@ -47,18 +47,29 @@ export interface BlockEditorControlUIProps {
 
 export interface BlockEditorControlDefaultUIState {
   selectedMenu: MenuType | null;
+  selectedColor: string | null;
 }
 
 export class BlockEditorControlDefaultUI extends React.Component<
   BlockEditorControlUIProps,
   BlockEditorControlDefaultUIState
 > {
-  state = { selectedMenu: null };
+  state = { selectedMenu: null, selectedColor: null };
 
   toggleMenu = (menu: MenuType) => {
     this.setState({
       selectedMenu: this.state.selectedMenu === menu ? null : menu,
     });
+
+    if (menu === 'color' || menu === 'backgroundColor') {
+      const {
+        value: { byId, focusedNodeId },
+      } = this.props;
+      const selectedNode = focusedNodeId ? byId[focusedNodeId] : null;
+      this.setState({
+        selectedColor: selectedNode ? selectedNode.color : undefined,
+      });
+    }
   };
 
   renderColorMenuItem = (which: 'color' | 'backgroundColor') => {
@@ -75,12 +86,37 @@ export class BlockEditorControlDefaultUI extends React.Component<
           color={selectedNode[which]}
         />
         {this.state.selectedMenu === which && (
-          <div style={{ position: 'absolute', zIndex: 100 }}>
-            <SketchPicker
-              color={selectedNode[which] || undefined}
-              onChange={({ hex }) => {
-                this.props.updateBlock(focusedNodeId, { [which]: hex });
+          <div
+            style={{
+              position: 'absolute',
+              zIndex: 100,
+              backgroundColor: 'white',
+            }}
+          >
+            <button
+              className={this.props.buttonClassName}
+              onClick={() => {
+                this.props.updateBlock(focusedNodeId, { [which]: undefined });
                 this.toggleMenu(which);
+              }}
+            >
+              Clear
+            </button>
+            <button
+              className={this.props.buttonClassName}
+              onClick={() => {
+                this.toggleMenu(which);
+                this.props.updateBlock(focusedNodeId, {
+                  [which]: this.state.selectedColor,
+                });
+              }}
+            >
+              Done
+            </button>
+            <SketchPicker
+              color={this.state.selectedColor || undefined}
+              onChangeComplete={({ hex }) => {
+                this.setState({ selectedColor: hex });
               }}
             />
           </div>
@@ -244,14 +280,14 @@ export class BlockEditorControlDefaultUI extends React.Component<
             <button aria-label="delete" onClick={props.removeFocused}>
               🗑
             </button>
-            <button>
+            <div>
               <BlockBreadCrumbs
                 onSelect={nodeId => focusNode(nodeId, true)}
                 byId={byId}
                 node={focusedNode}
                 {...breadCrumbsProps}
               />
-            </button>
+            </div>
             <div style={{ paddingBottom: 20 }}>
               {blockProps.map(blockProp => (
                 <div

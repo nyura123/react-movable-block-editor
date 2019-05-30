@@ -6,11 +6,13 @@ import { DraggableColBlock } from '../blocks/DraggableColBlock';
 import { defaultRenderEditBlock } from '../blocks/ResizableBlock';
 import { BlockEditorProps, BlockEditorValue } from './BlockEditorProps';
 
+import { cloneDeep } from 'lodash';
+
 export interface BlockEditorState {
   value: BlockEditorValue;
 }
 
-const maxUndoStack = 10;
+// const maxUndoStack = 10;
 
 export class BlockEditor extends React.Component<
   BlockEditorProps,
@@ -34,7 +36,11 @@ export class BlockEditor extends React.Component<
   }
 
   componentDidUpdate(prevProps: BlockEditorProps, prevState: BlockEditorState) {
-    if (this.props.onChange && this.state.value !== prevState.value) {
+    if (
+      this.props.onChange &&
+      this.state.value !== prevState.value &&
+      this.state.value !== this.props.value
+    ) {
       const { value } = this.state;
       this.props.onChange(value);
     } else if (
@@ -54,9 +60,10 @@ export class BlockEditor extends React.Component<
         value: {
           ...this.state.value,
           undoStack: [
-            prevState.value.byId,
+            cloneDeep(prevState.value.byId),
             ...this.state.value.undoStack,
-          ].slice(-maxUndoStack),
+          ],
+          // .slice(-maxUndoStack),
         },
       });
     }
