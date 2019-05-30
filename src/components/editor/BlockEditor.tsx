@@ -12,7 +12,7 @@ export interface BlockEditorState {
   value: BlockEditorValue;
 }
 
-// const maxUndoStack = 10;
+const maxUndoStack = 10;
 
 export class BlockEditor extends React.Component<
   BlockEditorProps,
@@ -62,8 +62,7 @@ export class BlockEditor extends React.Component<
           undoStack: [
             cloneDeep(prevState.value.byId),
             ...this.state.value.undoStack,
-          ],
-          // .slice(-maxUndoStack),
+          ].slice(0, maxUndoStack),
         },
       });
     }

@@ -291,6 +291,7 @@ export class BlockEditorControlDefaultUI extends React.Component<
             <div style={{ paddingBottom: 20 }}>
               {blockProps.map(blockProp => (
                 <div
+                  key={blockProp.prop}
                   style={{ display: 'inline-block', marginRight: 10 }}
                   className="form-group"
                 >
