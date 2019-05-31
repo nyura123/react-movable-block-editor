@@ -10,7 +10,7 @@ The output is an object that can be serialized to json, React, html.
 
 ### Demos:
 
-- [Editor demo](https://nyura123.github.io/react-movable-block-editor/)
+- [Editor demo](https://react-movable-block-editor.glitch.me/)
 
 - [Grid demo](https://nyura123.github.io/react-movable-block-grid-example/)
 
