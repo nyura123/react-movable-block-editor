@@ -119,7 +119,7 @@ const MyContentCell = (props: BlockProps) => {
     <div
       onClick={e => {
         e.stopPropagation();
-        props.sendOp(value => focusNode(value, props.node));
+        props.changeBlocks(value => focusNode(value, props.node));
       }}
       style={
         props.node.id === props.focusedNodeId
@@ -137,7 +137,7 @@ const MyContentCell = (props: BlockProps) => {
         }}
         onResize={(_event, { size }) => {
           const { width, height } = size;
-          props.sendOp(value =>
+          props.changeBlocks(value =>
             update(value, props.node.id, { width, height })
           );
         }}
@@ -146,7 +146,7 @@ const MyContentCell = (props: BlockProps) => {
           key={'col_' + props.node.id}
           node={props.node}
           renderEditBlock={props.renderEditBlock}
-          sendOp={props.sendOp}
+          changeBlocks={props.changeBlocks}
           getNode={props.getNode}
           focusedNodeId={props.focusedNodeId}
         >

@@ -82,7 +82,7 @@ export class DraggableRowBlock extends React.Component<
           ? { beforeItemId: this.props.node.id }
           : { afterItemId: this.props.node.id };
 
-        this.props.sendOp(
+        this.props.changeBlocks(
           onDropped(
             e.dataTransfer.types as Array<string>,
             this.props.node.parentId || '', // row over row -> place in parent container
@@ -99,7 +99,7 @@ export class DraggableRowBlock extends React.Component<
             : { afterItemId: childrenIds[numChildren - 1] }
           : null;
 
-        this.props.sendOp(
+        this.props.changeBlocks(
           onDropped(
             e.dataTransfer.types as Array<string>,
             this.props.node.id, // col or other over row -> place in this row
@@ -162,7 +162,7 @@ export class DraggableRowBlock extends React.Component<
     const {
       node,
       getNode,
-      sendOp,
+      changeBlocks,
       renderEditBlock,
       focusedNodeId,
     } = this.props;
@@ -239,7 +239,7 @@ export class DraggableRowBlock extends React.Component<
                       getNode,
                       focusedNodeId,
                       renderEditBlock,
-                      sendOp,
+                      changeBlocks,
                     })}
                   </div>
                 );

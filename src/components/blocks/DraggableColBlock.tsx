@@ -81,7 +81,7 @@ export class DraggableColBlock extends React.Component<
           ? { beforeItemId: this.props.node.id }
           : { afterItemId: this.props.node.id };
 
-        this.props.sendOp(
+        this.props.changeBlocks(
           onDropped(
             e.dataTransfer.types as Array<string>,
             this.props.node.parentId || '', // col over col -> place in parent container
@@ -98,7 +98,7 @@ export class DraggableColBlock extends React.Component<
             : { afterItemId: childrenIds[numChildren - 1] }
           : null;
 
-        this.props.sendOp(
+        this.props.changeBlocks(
           onDropped(
             e.dataTransfer.types as Array<string>,
             this.props.node.id, // row or other over col -> place in this col
@@ -156,14 +156,19 @@ export class DraggableColBlock extends React.Component<
   };
 
   renderChild(nodeId: string) {
-    const { getNode, sendOp, focusedNodeId, renderEditBlock } = this.props;
+    const {
+      getNode,
+      changeBlocks,
+      focusedNodeId,
+      renderEditBlock,
+    } = this.props;
     const node = getNode(nodeId);
     if (!node) return null;
     return renderEditBlock({
       node,
       renderEditBlock,
       focusedNodeId,
-      sendOp,
+      changeBlocks,
       getNode,
     });
   }

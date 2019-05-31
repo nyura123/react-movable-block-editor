@@ -52,7 +52,7 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
         e.dataTransfer.getData('text/plain')
       ) as DraggedInfo;
 
-      this.props.sendOp(
+      this.props.changeBlocks(
         onDropped(
           e.dataTransfer.types as Array<string>,
           this.props.node.id,
@@ -75,13 +75,18 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
   };
 
   renderChild(nodeId: string) {
-    const { sendOp, getNode, focusedNodeId, renderEditBlock } = this.props;
+    const {
+      changeBlocks,
+      getNode,
+      focusedNodeId,
+      renderEditBlock,
+    } = this.props;
     const node = getNode(nodeId);
     if (!node) return null;
     return renderEditBlock({
       node,
       renderEditBlock,
-      sendOp,
+      changeBlocks,
       getNode,
       focusedNodeId,
     });

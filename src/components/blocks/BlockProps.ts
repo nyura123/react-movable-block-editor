@@ -11,6 +11,6 @@ export interface BlockProps {
   getNode: GetNode;
   node: BlockNode;
   focusedNodeId: string | null;
-  sendOp: (op: NodeOp) => any;
+  changeBlocks: (op: NodeOp) => any;
   renderEditBlock: (props: BlockProps) => ReactElement;
 }

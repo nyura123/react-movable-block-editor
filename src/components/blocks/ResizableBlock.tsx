@@ -17,7 +17,7 @@ export const ResizableBlock = (
     node,
     renderEditBlock,
     getNode,
-    sendOp,
+    changeBlocks,
     focusedNodeId,
     width,
     height,
@@ -27,7 +27,7 @@ export const ResizableBlock = (
     <div
       onClick={e => {
         e.stopPropagation();
-        sendOp(value => focusNode(value, node));
+        changeBlocks(value => focusNode(value, node));
       }}
       style={
         node.id === focusedNodeId
@@ -45,7 +45,7 @@ export const ResizableBlock = (
         }}
         onResize={(_event, { size }) => {
           const { width, height } = size;
-          sendOp(value => update(value, node.id, { width, height }));
+          changeBlocks(value => update(value, node.id, { width, height }));
         }}
         // minConstraints={[20, 20]}
         // maxConstraints={[300, 300]}
@@ -56,7 +56,7 @@ export const ResizableBlock = (
             node={node}
             renderEditBlock={renderEditBlock}
             getNode={getNode}
-            sendOp={sendOp}
+            changeBlocks={changeBlocks}
             focusedNodeId={focusedNodeId}
           />
         ) : node.type === 'row' ? (
@@ -65,14 +65,14 @@ export const ResizableBlock = (
             node={node}
             renderEditBlock={renderEditBlock}
             getNode={getNode}
-            sendOp={sendOp}
+            changeBlocks={changeBlocks}
             focusedNodeId={focusedNodeId}
           />
         ) : node.type === 'markdown' ? (
           <MarkdownBlock
             node={node}
             update={(nodeId, props) =>
-              sendOp(value => update(value, nodeId, props))
+              changeBlocks(value => update(value, nodeId, props))
             }
           />
         ) : node.type === 'layer' ? (
@@ -81,7 +81,7 @@ export const ResizableBlock = (
             node={node}
             renderEditBlock={renderEditBlock}
             getNode={getNode}
-            sendOp={sendOp}
+            changeBlocks={changeBlocks}
             focusedNodeId={focusedNodeId}
           />
         ) : (
@@ -90,7 +90,7 @@ export const ResizableBlock = (
             node={node}
             renderEditBlock={renderEditBlock}
             getNode={getNode}
-            sendOp={sendOp}
+            changeBlocks={changeBlocks}
             focusedNodeId={focusedNodeId}
           />
         )}
@@ -103,7 +103,7 @@ export const defaultRenderEditBlock = ({
   node,
   renderEditBlock,
   getNode,
-  sendOp,
+  changeBlocks,
   focusedNodeId,
 }: BlockProps) => (
   <ResizableBlock
@@ -112,7 +112,7 @@ export const defaultRenderEditBlock = ({
     renderEditBlock={renderEditBlock}
     node={node}
     getNode={getNode}
-    sendOp={sendOp}
+    changeBlocks={changeBlocks}
     focusedNodeId={focusedNodeId}
   />
 );

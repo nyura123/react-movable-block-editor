@@ -23,7 +23,7 @@ function renderCustomEditBlock(props: BlockProps) {
         <MyEditInputBlock
           node={props.node}
           renderEditBlock={props.renderEditBlock}
-          sendOp={props.sendOp}
+          changeBlocks={props.changeBlocks}
           getNode={props.getNode}
           focusedNodeId={props.focusedNodeId}
         />
@@ -53,7 +53,7 @@ export function myRenderEditBlock({
   node,
   renderEditBlock,
   getNode,
-  sendOp,
+  changeBlocks,
   focusedNodeId,
 }: BlockProps) {
   switch (node.type as any) {
@@ -62,7 +62,7 @@ export function myRenderEditBlock({
         node,
         renderEditBlock,
         getNode,
-        sendOp,
+        changeBlocks,
         focusedNodeId,
       });
     default:
@@ -70,7 +70,7 @@ export function myRenderEditBlock({
         node,
         renderEditBlock,
         getNode,
-        sendOp,
+        changeBlocks,
         focusedNodeId,
       });
   }
@@ -116,7 +116,7 @@ const MyEditInputBlock = (props: BlockProps) => {
       onDragStart={e => onDragStart(e, props.node, getBoundingRect)}
       onClick={e => {
         e.stopPropagation();
-        props.sendOp((value: BlockEditorValue) =>
+        props.changeBlocks((value: BlockEditorValue) =>
           focusNode(value, props.node, true)
         );
       }}
@@ -139,7 +139,7 @@ const MyEditInputBlock = (props: BlockProps) => {
       <input
         onChange={e => {
           // what you type in the input editor is what the placeholder will be
-          props.sendOp((value: BlockEditorValue) =>
+          props.changeBlocks((value: BlockEditorValue) =>
             update(value, props.node.id, { value: e.target.value })
           );
         }}

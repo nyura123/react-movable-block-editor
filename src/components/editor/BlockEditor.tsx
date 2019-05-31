@@ -102,7 +102,7 @@ export class BlockEditor extends React.Component<
           key={'col_' + rootNode.id}
           node={rootNode}
           getNode={this.getNode}
-          sendOp={this.onSendOp}
+          changeBlocks={this.onSendOp}
           focusedNodeId={this.state.value.focusedNodeId}
           renderEditBlock={renderEditBlock}
         />
