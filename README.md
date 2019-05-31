@@ -12,7 +12,7 @@ The output is an object that can be serialized to json, React, html.
 
 - [Editor demo](https://react-movable-block-editor.glitch.me/)
 
-- [Grid demo](https://tartan-lyre.glitch.me/)
+- [Grid demo](https://react-movable-block-editor-grid.glitch.me/)
 
 ### Usage:
 
