@@ -114,8 +114,13 @@ const App: React.FC = () => {
         width: 240,
         height: 230,
         top: 0,
-        left: 0,
-        value: '### Content',
+        left: 16,
+        value: `### Content 
+> QUOTE
+> 
+> GOES
+> 
+> HERE`,
         childrenIds: [],
       },
       row1: {
@@ -123,10 +128,10 @@ const App: React.FC = () => {
         type: 'row',
         name: 'row1',
         parentId: 'layer1',
-        width: 240,
-        height: 40,
+        width: 210,
+        height: 60,
         top: 230,
-        left: 250,
+        left: 270,
         childrenIds: ['input1', 'input2'],
       },
     },

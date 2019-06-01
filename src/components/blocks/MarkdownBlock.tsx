@@ -38,6 +38,7 @@ export class MarkdownBlock extends React.Component<MarkdownBlockProps> {
           name="value"
           placeholder="Type here..."
           value={value}
+          style={{ width: '95%', height: '95%', outline: 'none' }}
           onChange={e => update(node.id, { value: e.target.value })}
         />
       </div>

@@ -74,7 +74,6 @@ export const ResizableBlock = (
         ) : node.type === 'markdown' ? (
           <MarkdownBlock
             node={node}
-            undoRedoVersion={undoRedoVersion}
             update={(nodeId, props) =>
               changeBlocks(value => update(value, nodeId, props))
             }
