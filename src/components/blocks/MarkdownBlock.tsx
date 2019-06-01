@@ -7,8 +7,46 @@ export interface MarkdownBlockProps {
   update: (nodeId: string, props: Partial<BlockNode>) => any;
 }
 
+export interface MarkdownBlockState {
+  initialVal: string; // for contenteditable
+}
+
 export class MarkdownBlock extends React.Component<MarkdownBlockProps> {
   selfRef: HTMLElement | null = null;
+  inputListener: any = null;
+
+  state = {
+    initialVal: this.props.node.value || 'CONTENT',
+  };
+
+  componentDidMount() {
+    this.setupContentEditableListener(this.props);
+  }
+
+  componentDidUpdate(prevProps: MarkdownBlockProps) {
+    if (prevProps.node.id !== this.props.node.id) {
+      this.setupContentEditableListener(this.props);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.inputListener && this.selfRef) {
+      this.selfRef.removeEventListener('input', this.inputListener);
+    }
+  }
+
+  setupContentEditableListener = (props: MarkdownBlockProps) => {
+    if (this.inputListener && this.selfRef) {
+      this.selfRef.removeEventListener('input', this.inputListener);
+    }
+
+    if (this.selfRef) {
+      this.inputListener = (e: any) => {
+        this.props.update(props.node.id, { value: e.target.innerText });
+      };
+      this.selfRef.addEventListener('input', this.inputListener);
+    }
+  };
 
   getBoundingRect = () => {
     return this.selfRef && this.selfRef.getBoundingClientRect
@@ -17,29 +55,20 @@ export class MarkdownBlock extends React.Component<MarkdownBlockProps> {
   };
 
   render() {
-    const { node, update } = this.props;
-    const { value } = node;
-
     return (
       <div
         ref={el => (this.selfRef = el)}
         draggable
+        contentEditable={true}
         onDragStart={e => onDragStart(e, this.props.node, this.getBoundingRect)}
         style={{
           width: '100%',
           height: '100%',
-          backgroundColor: '#ffc0cb75',
-          padding: 5,
-          borderRadius: 3,
+          color: this.props.node.color || undefined,
+          backgroundColor: this.props.node.backgroundColor || undefined,
         }}
       >
-        <textarea
-          className="form-control"
-          name="value"
-          placeholder="Type here..."
-          value={value}
-          onChange={e => update(node.id, { value: e.target.value })}
-        />
+        {this.state.initialVal}
       </div>
     );
   }
