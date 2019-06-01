@@ -60,6 +60,7 @@ export class MarkdownBlock extends React.Component<MarkdownBlockProps> {
         ref={el => (this.selfRef = el)}
         draggable
         contentEditable={true}
+        suppressContentEditableWarning={true}
         onDragStart={e => onDragStart(e, this.props.node, this.getBoundingRect)}
         style={{
           width: '100%',

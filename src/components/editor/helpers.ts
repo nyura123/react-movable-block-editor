@@ -71,7 +71,10 @@ export function newBlockId(byId: ById, prefix = 'node') {
   return prefix + '_' + nextId;
 }
 
-export function create(value: BlockEditorValue, props: Partial<BlockNode>) {
+export function create(
+  value: BlockEditorValue,
+  props: Partial<BlockNode>
+): BlockEditorValue {
   let { byId } = value;
   let nodeId = newBlockId(byId);
   const node = { ...byId[nodeId], ...props };
@@ -82,7 +85,7 @@ export function update(
   value: BlockEditorValue,
   nodeId: string,
   propsToUpdate: Partial<BlockNode>
-) {
+): BlockEditorValue {
   let { byId } = value;
   const node = { ...byId[nodeId], ...propsToUpdate };
   return { ...value, byId: updateNode(byId, node) };
@@ -283,7 +286,7 @@ export function focusNode(
   value: BlockEditorValue,
   node: BlockNode,
   focus = true
-) {
+): BlockEditorValue {
   if (!node) return value;
   const { focusedNodeId } = value;
   return {

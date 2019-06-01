@@ -4,6 +4,7 @@ import { ById, BlockNode } from '../../data';
 
 export interface BlockEditorValue {
   byId: ById;
+  undoRedoVersion: number;
   rootNodeId: string;
   focusedNodeId: string | null;
   copiedNode: BlockNode | null;

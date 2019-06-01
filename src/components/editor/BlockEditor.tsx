@@ -91,6 +91,7 @@ export class BlockEditor extends React.Component<
 
     return (
       <div
+        key={'undoRedoVersion_' + this.state.value.undoRedoVersion}
         style={{
           position: 'relative',
           width: rootNode.width,

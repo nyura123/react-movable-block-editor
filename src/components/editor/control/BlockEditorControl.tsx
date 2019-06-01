@@ -150,8 +150,10 @@ export class BlockEditorControl extends React.Component<
       const newById = undoStack[0];
       const newRedoStack = [byId, ...redoStack];
       const newUndoStack = undoStack.slice(1);
+      const undoRedoVersion = this.props.value.undoRedoVersion;
       this.props.onChange({
         ...this.props.value,
+        undoRedoVersion: undoRedoVersion + 1,
         byId: newById,
         undoStack: newUndoStack,
         redoStack: newRedoStack,
@@ -167,8 +169,10 @@ export class BlockEditorControl extends React.Component<
       const newById = redoStack[0];
       const newUndoStack = [byId, ...undoStack];
       const newRedoStack = redoStack.slice(1);
+      const undoRedoVersion = this.props.value.undoRedoVersion;
       this.props.onChange({
         ...this.props.value,
+        undoRedoVersion: undoRedoVersion + 1,
         byId: newById,
         undoStack: newUndoStack,
         redoStack: newRedoStack,
