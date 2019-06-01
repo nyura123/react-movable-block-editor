@@ -139,7 +139,7 @@ const MyEditInputBlock = (props: BlockProps) => {
       <input
         onChange={e => {
           // what you type in the input editor is what the placeholder will be
-          props.changeBlocks((value: BlockEditorValue) =>
+          props.changeBlocks(value =>
             update(value, props.node.id, { value: e.target.value })
           );
         }}

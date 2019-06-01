@@ -50,6 +50,7 @@ const App: React.FC = () => {
   const [editorState, setEditorState] = useState<BlockEditorValue>({
     copiedNode: null,
     focusedNodeId: null,
+    undoRedoVersion: 1,
     rootNodeId: 'container1',
     undoStack: [],
     redoStack: [],
