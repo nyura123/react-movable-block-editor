@@ -8,7 +8,16 @@ The output is an object that can be serialized to json, React, html.
 
 `npm install react-movable-block-editor react-color react-resizable react-markdown lodash-es --save`
 
+
+
 ### Demos:
+
+- [Editor demo](https://nyura123.github.io/react-movable-block-editor/)
+
+- [Grid demo](https://nyura123.github.io/react-movable-block-grid-example/)
+
+
+### Remix on Glitch:
 
 - [Editor demo](https://react-movable-block-editor.glitch.me/)
 
