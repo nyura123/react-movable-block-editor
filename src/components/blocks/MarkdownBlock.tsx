@@ -4,6 +4,7 @@ import { onDragStart } from '../../utils/dragHelpers';
 
 export interface MarkdownBlockProps {
   node: BlockNode;
+  undoRedoVersion: number;
   update: (nodeId: string, props: Partial<BlockNode>) => any;
 }
 
@@ -26,6 +27,11 @@ export class MarkdownBlock extends React.Component<MarkdownBlockProps> {
   componentDidUpdate(prevProps: MarkdownBlockProps) {
     if (prevProps.node.id !== this.props.node.id) {
       this.setupContentEditableListener(this.props);
+    }
+
+    // Update contenteditable value on undo/redo
+    if (this.props.undoRedoVersion !== prevProps.undoRedoVersion) {
+      this.setState({ initialVal: this.props.node.value });
     }
   }
 

@@ -8,6 +8,7 @@ export type GetNode = (id: string) => BlockNode | undefined;
 export type NodeOp = (value: BlockEditorValue) => BlockEditorValue;
 
 export interface BlockProps {
+  undoRedoVersion: number;
   getNode: GetNode;
   node: BlockNode;
   focusedNodeId: string | null;

@@ -17,6 +17,7 @@ export const ResizableBlock = (
     node,
     renderEditBlock,
     getNode,
+    undoRedoVersion,
     changeBlocks,
     focusedNodeId,
     width,
@@ -58,6 +59,7 @@ export const ResizableBlock = (
             getNode={getNode}
             changeBlocks={changeBlocks}
             focusedNodeId={focusedNodeId}
+            undoRedoVersion={undoRedoVersion}
           />
         ) : node.type === 'row' ? (
           <DraggableRowBlock
@@ -67,10 +69,12 @@ export const ResizableBlock = (
             getNode={getNode}
             changeBlocks={changeBlocks}
             focusedNodeId={focusedNodeId}
+            undoRedoVersion={undoRedoVersion}
           />
         ) : node.type === 'markdown' ? (
           <MarkdownBlock
             node={node}
+            undoRedoVersion={undoRedoVersion}
             update={(nodeId, props) =>
               changeBlocks(value => update(value, nodeId, props))
             }
@@ -83,6 +87,7 @@ export const ResizableBlock = (
             getNode={getNode}
             changeBlocks={changeBlocks}
             focusedNodeId={focusedNodeId}
+            undoRedoVersion={undoRedoVersion}
           />
         ) : (
           <ImageBlock
@@ -92,6 +97,7 @@ export const ResizableBlock = (
             getNode={getNode}
             changeBlocks={changeBlocks}
             focusedNodeId={focusedNodeId}
+            undoRedoVersion={undoRedoVersion}
           />
         )}
       </ResizableBox>
@@ -104,6 +110,7 @@ export const defaultRenderEditBlock = ({
   renderEditBlock,
   getNode,
   changeBlocks,
+  undoRedoVersion,
   focusedNodeId,
 }: BlockProps) => (
   <ResizableBlock
@@ -114,5 +121,6 @@ export const defaultRenderEditBlock = ({
     getNode={getNode}
     changeBlocks={changeBlocks}
     focusedNodeId={focusedNodeId}
+    undoRedoVersion={undoRedoVersion}
   />
 );

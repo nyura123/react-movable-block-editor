@@ -146,6 +146,7 @@ const MyContentCell = (props: BlockProps) => {
         <DraggableColBlock
           key={'col_' + props.node.id}
           node={props.node}
+          undoRedoVersion={props.undoRedoVersion}
           renderEditBlock={props.renderEditBlock}
           changeBlocks={props.changeBlocks}
           getNode={props.getNode}

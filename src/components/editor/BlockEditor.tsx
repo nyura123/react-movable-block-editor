@@ -83,7 +83,7 @@ export class BlockEditor extends React.Component<
   render() {
     const { renderEditBlock } = this.props;
     const {
-      value: { byId, rootNodeId },
+      value: { byId, rootNodeId, undoRedoVersion },
     } = this.state as BlockEditorState;
     const rootNode = byId[rootNodeId] as BlockNode;
 
@@ -91,7 +91,6 @@ export class BlockEditor extends React.Component<
 
     return (
       <div
-        key={'undoRedoVersion_' + this.state.value.undoRedoVersion}
         style={{
           position: 'relative',
           width: rootNode.width,
@@ -101,6 +100,7 @@ export class BlockEditor extends React.Component<
         {/* root component is a Col */}
         <DraggableColBlock
           key={'col_' + rootNode.id}
+          undoRedoVersion={undoRedoVersion}
           node={rootNode}
           getNode={this.getNode}
           changeBlocks={this.onSendOp}

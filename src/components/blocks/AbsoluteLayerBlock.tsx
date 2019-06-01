@@ -78,6 +78,7 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
     const {
       changeBlocks,
       getNode,
+      undoRedoVersion,
       focusedNodeId,
       renderEditBlock,
     } = this.props;
@@ -86,6 +87,7 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
     return renderEditBlock({
       node,
       renderEditBlock,
+      undoRedoVersion,
       changeBlocks,
       getNode,
       focusedNodeId,

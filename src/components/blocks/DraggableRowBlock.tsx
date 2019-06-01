@@ -162,6 +162,7 @@ export class DraggableRowBlock extends React.Component<
     const {
       node,
       getNode,
+      undoRedoVersion,
       changeBlocks,
       renderEditBlock,
       focusedNodeId,
@@ -237,6 +238,7 @@ export class DraggableRowBlock extends React.Component<
                     {renderEditBlock({
                       node,
                       getNode,
+                      undoRedoVersion,
                       focusedNodeId,
                       renderEditBlock,
                       changeBlocks,

@@ -21,6 +21,7 @@ function renderCustomEditBlock(props: BlockProps) {
     case 'input':
       return (
         <MyEditInputBlock
+          undoRedoVersion={props.undoRedoVersion}
           node={props.node}
           renderEditBlock={props.renderEditBlock}
           changeBlocks={props.changeBlocks}
@@ -53,6 +54,7 @@ export function myRenderEditBlock({
   node,
   renderEditBlock,
   getNode,
+  undoRedoVersion,
   changeBlocks,
   focusedNodeId,
 }: BlockProps) {
@@ -60,6 +62,7 @@ export function myRenderEditBlock({
     case 'custom':
       return renderCustomEditBlock({
         node,
+        undoRedoVersion,
         renderEditBlock,
         getNode,
         changeBlocks,
@@ -68,6 +71,7 @@ export function myRenderEditBlock({
     default:
       return defaultRenderEditBlock({
         node,
+        undoRedoVersion,
         renderEditBlock,
         getNode,
         changeBlocks,

@@ -159,6 +159,7 @@ export class DraggableColBlock extends React.Component<
     const {
       getNode,
       changeBlocks,
+      undoRedoVersion,
       focusedNodeId,
       renderEditBlock,
     } = this.props;
@@ -166,6 +167,7 @@ export class DraggableColBlock extends React.Component<
     if (!node) return null;
     return renderEditBlock({
       node,
+      undoRedoVersion,
       renderEditBlock,
       focusedNodeId,
       changeBlocks,
