@@ -131,10 +131,11 @@ export class BlockEditorControl extends React.Component<
     } = this.props;
     if (focusedNodeId) {
       const focusedNode = byId[focusedNodeId];
-      this.props.onChange({
-        ...this.props.value,
-        copiedNode: deepCopy(byId, focusedNode),
-      });
+      focusedNode &&
+        this.props.onChange({
+          ...this.props.value,
+          copiedNode: deepCopy(byId, focusedNode),
+        });
     }
   };
 
@@ -195,9 +196,10 @@ export class BlockEditorControl extends React.Component<
         moveInDirection={this.moveInDirection}
         copyFocused={this.copyFocused}
         paste={this.paste}
-        focusNode={(nodeId: string, focus: boolean) =>
-          this.focusNode(value.byId[nodeId], focus)
-        }
+        focusNode={(nodeId: string, focus: boolean) => {
+          const node = value.byId[nodeId];
+          node && this.focusNode(node, focus);
+        }}
         removeFocused={this.removeFocused}
         updateBlock={this.updateBlock}
         undo={this.undo}

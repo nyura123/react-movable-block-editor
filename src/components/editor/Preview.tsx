@@ -76,6 +76,12 @@ export const Preview = ({
         >
           {node.childrenIds.map(id => {
             const childNode = byId[id];
+            if (!childNode)
+              return (
+                <div>
+                  Error in layer {node.id}: child node {id} not found
+                </div>
+              );
             return (
               <div
                 key={childNode.id}
@@ -87,7 +93,7 @@ export const Preview = ({
               >
                 {renderPreviewBlock({
                   byId,
-                  node: byId[id],
+                  node: childNode,
                   renderPreviewBlock,
                 })}
               </div>
@@ -115,13 +121,20 @@ export const Preview = ({
           }}
         >
           {/* <div>{node.name}</div> */}
-          {node.childrenIds.map(id =>
-            renderPreviewBlock({
+          {node.childrenIds.map(id => {
+            const childNode = byId[id];
+            if (!childNode)
+              return (
+                <div>
+                  Error in col {node.id}: child node {id} not found
+                </div>
+              );
+            return renderPreviewBlock({
               byId,
-              node: byId[id],
+              node: childNode,
               renderPreviewBlock,
-            })
-          )}
+            });
+          })}
         </div>
       );
     case 'row':
@@ -137,13 +150,20 @@ export const Preview = ({
             flexDirection: 'row',
           }}
         >
-          {node.childrenIds.map(id =>
-            renderPreviewBlock({
+          {node.childrenIds.map(id => {
+            const childNode = byId[id];
+            if (!childNode)
+              return (
+                <div>
+                  Error in row {node.id}: child node {id} not found
+                </div>
+              );
+            return renderPreviewBlock({
               byId,
-              node: byId[id],
+              node: childNode,
               renderPreviewBlock,
-            })
-          )}
+            });
+          })}
         </div>
       );
     case 'custom':

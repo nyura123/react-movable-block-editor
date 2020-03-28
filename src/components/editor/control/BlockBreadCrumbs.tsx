@@ -26,7 +26,7 @@ export const BlockBreadCrumbs = (props: BlockBreadCrumbsProps) => {
     const node = byId[id];
     if (!node) break;
     crumbs.unshift({ label: `${node.type}-${node.id}`, id: node.id });
-    id = node.parentId;
+    id = node.parentId || '';
   }
   return (
     <nav aria-label="breadcrumb">

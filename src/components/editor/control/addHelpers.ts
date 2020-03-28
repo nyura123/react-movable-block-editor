@@ -21,7 +21,7 @@ export function addRow(
 
   if (!parentNode || allowedParents.indexOf(parentNode.type) < 0) {
     // try parent
-    parentNodeId = parentNode ? parentNode.parentId : null;
+    parentNodeId = parentNode ? parentNode.parentId || '' : '';
     parentNode = parentNodeId ? byId[parentNodeId] : parentNode;
 
     if (!parentNode || allowedParents.indexOf(parentNode.type) < 0) {
@@ -53,7 +53,7 @@ export function addRow(
 
   // update new child and all siblings' heights
   const updates: any = {};
-  if (parentNode.type === 'col') {
+  if (parentNode && parentNode.type === 'col') {
     if (parentNode && parentNode.childrenIds.length >= 1) {
       const childHeight = parentNode.height / parentNode.childrenIds.length;
       for (const childId of parentNode.childrenIds) {
@@ -85,7 +85,7 @@ export function addCol(
 
   if (!parentNode || allowedParents.indexOf(parentNode.type) < 0) {
     // try parent
-    parentNodeId = parentNode ? parentNode.parentId : null;
+    parentNodeId = parentNode ? parentNode.parentId || '' : '';
     parentNode = parentNodeId ? byId[parentNodeId] : parentNode;
 
     if (!parentNode || allowedParents.indexOf(parentNode.type) < 0) {
@@ -117,7 +117,7 @@ export function addCol(
 
   // update new child and all siblings' widths
   const updates: any = {};
-  if (parentNode.type === 'row') {
+  if (parentNode && parentNode.type === 'row') {
     if (parentNode && parentNode.childrenIds.length >= 1) {
       const childWidth = parentNode.width / parentNode.childrenIds.length;
       for (const childId of parentNode.childrenIds) {

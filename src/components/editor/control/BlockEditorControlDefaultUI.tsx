@@ -67,7 +67,7 @@ export class BlockEditorControlDefaultUI extends React.Component<
       } = this.props;
       const selectedNode = focusedNodeId ? byId[focusedNodeId] : null;
       this.setState({
-        selectedColor: selectedNode ? selectedNode.color : undefined,
+        selectedColor: selectedNode ? selectedNode.color || null : null,
       });
     }
   };
@@ -83,7 +83,7 @@ export class BlockEditorControlDefaultUI extends React.Component<
       <React.Fragment>
         <ColorButton
           onClick={() => this.toggleMenu(which)}
-          color={selectedNode[which]}
+          color={selectedNode ? selectedNode[which] || '' : ''}
         />
         {this.state.selectedMenu === which && (
           <div
@@ -360,8 +360,8 @@ function flipToFront(value: BlockEditorValue, nodeId: string | null) {
   const node = byId[nodeId];
   if (!node) return value;
   const parentId = node.parentId;
-  const parentNode = byId[parentId];
-  if (!parentNode) return value;
+  const parentNode = parentId ? byId[parentId] : undefined;
+  if (!parentNode || !parentId) return value;
   return move(value, nodeId, parentId, {
     afterItemId: parentNode.childrenIds[parentNode.childrenIds.length - 1],
   });

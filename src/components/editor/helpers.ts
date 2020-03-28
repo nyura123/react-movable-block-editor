@@ -14,7 +14,10 @@ export function deepCopy(byId: ById, node: BlockNode): BlockNode {
     ...node,
     value: cloneDeep(node.value),
     childrenIds: [...node.childrenIds],
-    children: node.childrenIds.map(id => deepCopy(byId, byId[id])),
+    children: node.childrenIds.map(id => {
+      const childNode = byId[id];
+      return deepCopy(byId, childNode as BlockNode);
+    }),
   };
 }
 
@@ -77,7 +80,8 @@ export function create(
 ): BlockEditorValue {
   let { byId } = value;
   let nodeId = newBlockId(byId);
-  const node = { ...byId[nodeId], ...props };
+  const node = { ...byId[nodeId], ...props } as BlockNode;
+  if (!node) return value;
   return { ...value, byId: updateNode(byId, node) };
 }
 
@@ -87,7 +91,8 @@ export function update(
   propsToUpdate: Partial<BlockNode>
 ): BlockEditorValue {
   let { byId } = value;
-  const node = { ...byId[nodeId], ...propsToUpdate };
+  const node = { ...byId[nodeId], ...propsToUpdate } as BlockNode;
+  if (!node) return value;
   return { ...value, byId: updateNode(byId, node) };
 }
 
@@ -132,7 +137,7 @@ export function move(
         ...(opts.absolutePos
           ? { top: opts.absolutePos.top, left: opts.absolutePos.left }
           : {}),
-      },
+      } as BlockNode,
       targetParentId,
       opts
     ),
@@ -154,7 +159,7 @@ export function moveInDirection(
   const targetParentId = node.parentId;
   if (!targetParentId) return value; // sanity check
   const parentNode = byId[targetParentId];
-  if (!parentNode) return value; // sanity check
+  if (!parentNode || !parentNode.parentId) return value; // sanity check
 
   const grandParentNode = byId[parentNode.parentId];
   // if (!parentNode) return value; // sanity check

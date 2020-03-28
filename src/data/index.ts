@@ -34,7 +34,7 @@ export interface BlockNode {
   alignItems?: string;
 }
 
-export type ById = any;
+export type ById = { [id: string]: BlockNode | undefined };
 
 export function updateNode(byId: ById, newNode: BlockNode): ById {
   return { ...byId, [newNode.id]: newNode };
@@ -44,7 +44,7 @@ export function removeNode(byId: ById, nodeId: string) {
   const node = byId[nodeId];
   if (!node) return byId;
   if (node && node.parentId) {
-    const parent: BlockNode = byId[node.parentId];
+    const parent = byId[node.parentId];
     if (parent) {
       const childIdx = parent.childrenIds.findIndex(id => id === node.id);
       if (childIdx >= 0) {
@@ -105,14 +105,14 @@ export function placeNodeInParent(
 
   // if parent changed, remove node from old parent
   if (node && node.parentId && node.parentId !== newParentId) {
-    const parent: BlockNode = byId[node.parentId];
+    const parent = byId[node.parentId];
     if (parent) {
       const childrenIds = parent.childrenIds.filter(id => id !== node.id);
       byId = updateNode(byId, { ...parent, childrenIds });
     }
   }
 
-  const newParent: BlockNode = byId[newParentId];
+  const newParent = byId[newParentId];
   if (newParent) {
     const childrenIds = reinsertIntoList(newParent.childrenIds, node.id, opts);
     byId = updateNode(byId, { ...newParent, childrenIds });

@@ -49,7 +49,7 @@ const App: React.FC = () => {
 
   const [editorState, setEditorState] = useState<BlockEditorValue>({
     copiedNode: null,
-    focusedNodeId: 'layer1',
+    focusedNodeId: null,
     undoRedoVersion: 1,
     undoStack: [],
     redoStack: [],
@@ -58,7 +58,7 @@ const App: React.FC = () => {
         id: 'container1',
         type: 'col',
         name: 'container1',
-        parentId: null, // root
+        parentId: undefined, // root
         width: 500,
         height: 300,
         childrenIds: ['layer1'],
@@ -152,6 +152,12 @@ const App: React.FC = () => {
     }
   };
 
+  const rootNode = editorState.byId[editorState.rootNodeId];
+
+  if (!rootNode) {
+    return <div>Error: no root node (id={editorState.rootNodeId})</div>;
+  }
+
   return (
     <div>
       <Button onClick={() => setShowLoadJsonModal(true)}>Load from json</Button>
@@ -185,7 +191,7 @@ const App: React.FC = () => {
             <Preview
               byId={editorState.byId}
               renderPreviewBlock={myRenderPreviewBlock}
-              node={editorState.byId[editorState.rootNodeId]}
+              node={rootNode}
             />
           </div>
         </Grid>
