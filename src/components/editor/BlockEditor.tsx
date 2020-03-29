@@ -9,6 +9,9 @@ import { BlockEditorProps, BlockEditorValue } from './BlockEditorProps';
 import { cloneDeep } from 'lodash';
 import { NodeOp } from '../blocks/BlockProps';
 
+import { DndProvider } from 'react-dnd';
+import Backend from 'react-dnd-html5-backend';
+
 export interface BlockEditorState {
   value: BlockEditorValue;
 }
@@ -98,15 +101,17 @@ export class BlockEditor extends React.Component<
         }}
       >
         {/* root component is a Col */}
-        <DraggableColBlock
-          key={'col_' + rootNode.id}
-          undoRedoVersion={undoRedoVersion}
-          node={rootNode}
-          getNode={this.getNode}
-          changeBlocks={this.onSendOp}
-          focusedNodeId={this.state.value.focusedNodeId}
-          renderEditBlock={renderEditBlock}
-        />
+        <DndProvider backend={Backend}>
+          <DraggableColBlock
+            key={'col_' + rootNode.id}
+            undoRedoVersion={undoRedoVersion}
+            node={rootNode}
+            getNode={this.getNode}
+            changeBlocks={this.onSendOp}
+            focusedNodeId={this.state.value.focusedNodeId}
+            renderEditBlock={renderEditBlock}
+          />
+        </DndProvider>
       </div>
     );
   }

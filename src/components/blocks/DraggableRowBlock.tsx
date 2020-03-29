@@ -1,165 +1,27 @@
 import * as React from 'react';
 import {
-  parseTypes,
-  getDragPositionRelativeToTarget,
-  onDragStart,
-  onDropped,
+  onDropped2,
+  getDragPositionRelativeToTarget2,
 } from '../../utils/dragHelpers';
 
 // import '../css/drag.css' //drag-node
 import { BlockProps } from './BlockProps';
+import {
+  useDrag,
+  DragSourceMonitor,
+  useDrop,
+  DropTargetMonitor,
+} from 'react-dnd';
 
-export interface DraggableRowBlockState {
-  wantToPlaceNext: 'top' | 'bottom' | 'firstChild' | 'lastChild' | null;
-}
+type WantToPlaceNext = 'top' | 'bottom' | 'firstChild' | 'lastChild' | null;
 
-export class DraggableRowBlock extends React.Component<
-  BlockProps,
-  DraggableRowBlockState
+class RowBlock extends React.Component<
+  BlockProps & { wantToPlaceNext: WantToPlaceNext }
 > {
-  state = {
-    wantToPlaceNext: null,
-  };
-
-  selfRef: HTMLElement | null = null;
-
-  getBoundingRect = () => {
-    return this.selfRef && this.selfRef.getBoundingClientRect
-      ? this.selfRef.getBoundingClientRect()
-      : null;
-  };
-
-  canDrop = (types: Array<string>) => {
-    const { draggedNodeType } = parseTypes(types);
-    const { getNode, node } = this.props;
-    const parentNode = node.parentId ? getNode(node.parentId) : null;
-    return (
-      // if our parent is a col, allow to place a sibling (row) before/after us
-      (draggedNodeType === 'row' && parentNode && parentNode.type === 'col') ||
-      // if we have children, we don't know if they can handle drops
-      (!this.props.children &&
-        (draggedNodeType === 'col' ||
-          draggedNodeType === 'markdown' ||
-          draggedNodeType === 'image' ||
-          draggedNodeType === 'layer' ||
-          draggedNodeType === 'custom'))
-    );
-  };
-
-  shouldPlaceBefore = (e: React.DragEvent<HTMLDivElement>, axis: 'y' | 'x') => {
-    // geometry: figure out whether the dragged element should go after us or before us in parent container
-    const relativeDraggedPosition = getDragPositionRelativeToTarget(
-      e,
-      this.getBoundingRect()
-    );
-    const placeBefore =
-      relativeDraggedPosition &&
-      (axis === 'y'
-        ? relativeDraggedPosition.top / relativeDraggedPosition.height < 0.3
-        : relativeDraggedPosition.left / relativeDraggedPosition.width < 0.3);
-
-    return placeBefore;
-  };
-
-  onDrop = (e: React.DragEvent<HTMLDivElement>, isPlaceHolder = false) => {
-    if (!this.canDrop(e.dataTransfer.types as Array<string>)) {
-      return;
-    }
-
-    e.stopPropagation();
-
-    if (!isPlaceHolder && this.state.wantToPlaceNext !== null) {
-      this.setState({ wantToPlaceNext: null });
-    }
-
-    const { draggedNodeId, draggedNodeType } = parseTypes(e.dataTransfer
-      .types as Array<string>);
-    if (draggedNodeId) {
-      const placeBefore = this.shouldPlaceBefore(e, 'y');
-
-      if (draggedNodeType === 'row') {
-        const anchorOpts = placeBefore
-          ? { beforeItemId: this.props.node.id }
-          : { afterItemId: this.props.node.id };
-
-        this.props.changeBlocks(
-          onDropped(
-            e.dataTransfer.types as Array<string>,
-            this.props.node.parentId || '', // row over row -> place in parent container
-            { ...anchorOpts, isPlaceHolder }
-          )
-        );
-      } else {
-        const placeBefore = this.shouldPlaceBefore(e, 'x');
-        const { childrenIds } = this.props.node;
-        const numChildren = childrenIds.length;
-        const anchorOpts = numChildren
-          ? placeBefore
-            ? { beforeItemId: childrenIds[0] }
-            : { afterItemId: childrenIds[numChildren - 1] }
-          : null;
-
-        this.props.changeBlocks(
-          onDropped(
-            e.dataTransfer.types as Array<string>,
-            this.props.node.id, // col or other over row -> place in this row
-            {
-              isPlaceHolder,
-              ...anchorOpts,
-            } // place in front of first child
-          )
-        );
-      }
-    }
-  };
-
-  onDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
-  onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    const { draggedNodeType } = parseTypes(e.dataTransfer.types as Array<
-      string
-    >);
-
-    if (this.canDrop(e.dataTransfer.types as Array<string>)) {
-      e.preventDefault();
-      e.stopPropagation();
-    } else {
-      return;
-    }
-
-    if (draggedNodeType === 'row') {
-      const placeBefore = this.shouldPlaceBefore(e, 'y');
-      if (placeBefore && this.state.wantToPlaceNext !== 'top') {
-        this.setState({
-          wantToPlaceNext: 'top',
-        });
-      } else if (!placeBefore && this.state.wantToPlaceNext !== 'bottom') {
-        this.setState({
-          wantToPlaceNext: 'bottom',
-        });
-      }
-    } else {
-      const placeBefore = this.shouldPlaceBefore(e, 'x');
-      this.setState({
-        wantToPlaceNext: placeBefore ? 'firstChild' : 'lastChild',
-      });
-    }
-  };
-
-  onDragLeave = (_e: React.DragEvent<HTMLDivElement>) => {
-    if (this.state.wantToPlaceNext !== null) {
-      this.setState({
-        wantToPlaceNext: null,
-      });
-    }
-    // this.onDrop(e, false);
-  };
-
   render() {
     const { children: reactChildren } = this.props;
     const {
+      wantToPlaceNext,
       node,
       getNode,
       undoRedoVersion,
@@ -167,7 +29,6 @@ export class DraggableRowBlock extends React.Component<
       renderEditBlock,
       focusedNodeId,
     } = this.props;
-    const { wantToPlaceNext } = this.state;
 
     const firstChildPlaceholderWidth = 3;
     let runningWidth =
@@ -185,15 +46,6 @@ export class DraggableRowBlock extends React.Component<
           />
         )}
         <div
-          ref={el => (this.selfRef = el)}
-          onDragOver={this.onDragOver}
-          onDragLeave={this.onDragLeave}
-          onDragEnter={this.onDragEnter}
-          onDrop={this.onDrop}
-          draggable
-          onDragStart={e =>
-            onDragStart(e, this.props.node, this.getBoundingRect)
-          }
           style={{
             position: 'relative',
             height: node.height,
@@ -275,3 +127,164 @@ export class DraggableRowBlock extends React.Component<
     );
   }
 }
+
+export const DraggableRowBlock: React.FC<BlockProps> = props => {
+  const selfRef = React.useRef<HTMLDivElement | null>(null);
+
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: 'row', id: props.node.id },
+    collect: (monitor: DragSourceMonitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const [
+    {
+      clientOffset,
+      dragSourceItemId,
+      dragSourceItemType,
+      isOver,
+      initialClientOffset,
+      initialSourceClientOffset,
+    },
+    drop,
+  ] = useDrop({
+    accept: ['col', 'row', 'layer', 'custom', 'image', 'markdown'],
+    canDrop: item => {
+      const { getNode, node } = props;
+      const parentNode = node.parentId ? getNode(node.parentId) : null;
+      const draggedNodeType = item.type;
+
+      return (
+        // if our parent is a col, allow to place a sibling (row) before/after us
+        (draggedNodeType === 'row' &&
+          parentNode &&
+          parentNode.type === 'col') ||
+        // if we have children, we don't know if they can handle drops
+        (!props.children &&
+          (draggedNodeType === 'col' ||
+            draggedNodeType === 'markdown' ||
+            draggedNodeType === 'image' ||
+            draggedNodeType === 'layer' ||
+            draggedNodeType === 'custom'))
+      );
+    },
+    drop: (item, monitor) => {
+      const isOver = monitor.isOver({ shallow: true });
+      // ?TODO check if already dropped in nested target... instead of shallow isOver check?
+      if (!isOver || !item) return null;
+      console.log('DROP', props.node.id, (item as any).id);
+      if (item.type === 'row') {
+        // geometry: figure out whether the dragged element should go after us or before us in parent container
+        const placeBefore = shouldPlaceBefore('y');
+        const anchorOpts = placeBefore
+          ? { beforeItemId: props.node.id }
+          : { afterItemId: props.node.id };
+
+        props.changeBlocks(
+          onDropped2(
+            (item as any).id,
+            props.node.parentId || '', // col over col -> place in parent container
+            { ...anchorOpts }
+          )
+        );
+      } else {
+        const placeBefore = shouldPlaceBefore('x');
+        const { childrenIds } = props.node;
+        const numChildren = childrenIds.length;
+        const anchorOpts = numChildren
+          ? placeBefore
+            ? { beforeItemId: childrenIds[0] }
+            : { afterItemId: childrenIds[numChildren - 1] }
+          : null;
+
+        props.changeBlocks(
+          onDropped2(
+            (item as any).id,
+            props.node.id, // row or other over col -> place in this col
+            {
+              ...anchorOpts,
+            } // place in front of first child
+          )
+        );
+      }
+      return { type: 'row', id: props.node.id };
+    },
+    collect: (monitor: DropTargetMonitor) => {
+      const dragSourceItem = monitor.getItem();
+      return {
+        isOver: monitor.isOver({ shallow: true }),
+        initialClientOffset: monitor.getInitialClientOffset(),
+        clientOffset: monitor.getClientOffset(),
+        dragSourceItemType: dragSourceItem ? dragSourceItem.type : '',
+        dragSourceItemId: dragSourceItem ? dragSourceItem.id : '',
+        initialSourceClientOffset: monitor.getInitialSourceClientOffset(),
+      };
+    },
+  });
+
+  const getBoundingRect = () => {
+    return selfRef.current && selfRef.current.getBoundingClientRect
+      ? selfRef.current.getBoundingClientRect()
+      : null;
+  };
+
+  const shouldPlaceBefore = (axis: 'y' | 'x') => {
+    if (!clientOffset || !isOver) {
+      return false;
+    }
+    // geometry: figure out whether the dragged element should go after us or before us
+    const relativeDraggedPosition = getDragPositionRelativeToTarget2(
+      { clientX: clientOffset.x, clientY: clientOffset.y },
+      getBoundingRect()
+    );
+    const placeBefore =
+      relativeDraggedPosition &&
+      (axis === 'y'
+        ? relativeDraggedPosition.top / relativeDraggedPosition.height < 0.3
+        : relativeDraggedPosition.left / relativeDraggedPosition.width < 0.3);
+    return placeBefore;
+  };
+
+  const calcWantToPlaceNext = (dragSourceItemType: string): WantToPlaceNext => {
+    if (!dragSourceItemType || !isOver) return null;
+    if (dragSourceItemType === 'row') {
+      const placeBefore = shouldPlaceBefore('y');
+      return placeBefore ? 'top' : 'bottom';
+    }
+    const placeBefore = shouldPlaceBefore('x');
+    return placeBefore ? 'firstChild' : 'lastChild';
+  };
+
+  const wantToPlaceNext = calcWantToPlaceNext(dragSourceItemType);
+
+  // useEffect(() => {
+  //   preview(getEmptyImage(), { captureDraggingState: true })
+  // }, [])
+
+  console.log('drag state', {
+    id: props.node.id,
+    draggedId: dragSourceItemId,
+    isDragging,
+    isOver,
+    wantToPlaceNext,
+    clientOffset,
+    initialClientOffset,
+    initialSourceClientOffset,
+  });
+
+  return (
+    <div ref={selfRef} style={{ width: '100%', height: '100%' }}>
+      <div ref={drop} style={{ width: '100%', height: '100%' }}>
+        <div ref={drag} style={{ width: '100%', height: '100%' }}>
+          <RowBlock
+            {...props}
+            {...{
+              wantToPlaceNext,
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};

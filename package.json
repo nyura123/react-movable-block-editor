@@ -1,6 +1,6 @@
 {
   "name": "react-movable-block-editor",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "author": {
     "name": "nyura123"
   },
@@ -63,13 +63,16 @@
     "lodash": "^4.17.11",
     "prettier": "^1.17.1",
     "pretty-quick": "^1.11.0",
-    "react": "^16.8.6",
     "react-color": "^2.17.3",
-    "react-dom": "^16.8.6",
     "react-markdown": "^4.0.8",
     "react-resizable": "^1.8.0",
     "tsdx": "^0.5.11",
     "tslib": "^1.9.3",
     "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "react-dnd": "^10.0.2",
+    "react-dnd-html5-backend": "^10.0.2",
+    "react-dnd-touch-backend": "^10.0.2"
   }
 }

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { BlockNode } from '../../data';
-import { onDragStart } from '../../utils/dragHelpers';
+import { useDrag, DragSourceMonitor } from 'react-dnd';
 
 export interface MarkdownBlockProps {
   node: BlockNode;
   update: (nodeId: string, props: Partial<BlockNode>) => any;
 }
 
-export class MarkdownBlock extends React.Component<MarkdownBlockProps> {
+class MarkdownBlockComp extends React.Component<MarkdownBlockProps> {
   selfRef: HTMLElement | null = null;
 
   getBoundingRect = () => {
@@ -23,8 +23,8 @@ export class MarkdownBlock extends React.Component<MarkdownBlockProps> {
     return (
       <div
         ref={el => (this.selfRef = el)}
-        draggable
-        onDragStart={e => onDragStart(e, this.props.node, this.getBoundingRect)}
+        // draggable
+        // onDragStart={e => onDragStart(e, this.props.node, this.getBoundingRect)}
         style={{
           width: '100%',
           height: '100%',
@@ -45,3 +45,18 @@ export class MarkdownBlock extends React.Component<MarkdownBlockProps> {
     );
   }
 }
+
+export const MarkdownBlock: React.FC<MarkdownBlockProps> = props => {
+  const [{}, drag] = useDrag({
+    item: { type: 'markdown', id: props.node.id },
+    collect: (monitor: DragSourceMonitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  return (
+    <div ref={drag} style={{ width: '100%', height: '100%' }}>
+      <MarkdownBlockComp {...props} />
+    </div>
+  );
+};
