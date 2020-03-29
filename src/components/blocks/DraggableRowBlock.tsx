@@ -131,24 +131,14 @@ class RowBlock extends React.Component<
 export const DraggableRowBlock: React.FC<BlockProps> = props => {
   const selfRef = React.useRef<HTMLDivElement | null>(null);
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{}, drag] = useDrag({
     item: { type: 'row', id: props.node.id },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
 
-  const [
-    {
-      clientOffset,
-      dragSourceItemId,
-      dragSourceItemType,
-      isOver,
-      initialClientOffset,
-      initialSourceClientOffset,
-    },
-    drop,
-  ] = useDrop({
+  const [{ clientOffset, dragSourceItemType, isOver }, drop] = useDrop({
     accept: ['col', 'row', 'layer', 'custom', 'image', 'markdown'],
     canDrop: item => {
       const { getNode, node } = props;
@@ -173,7 +163,6 @@ export const DraggableRowBlock: React.FC<BlockProps> = props => {
       const isOver = monitor.isOver({ shallow: true });
       // ?TODO check if already dropped in nested target... instead of shallow isOver check?
       if (!isOver || !item) return null;
-      console.log('DROP', props.node.id, (item as any).id);
       if (item.type === 'row') {
         // geometry: figure out whether the dragged element should go after us or before us in parent container
         const placeBefore = shouldPlaceBefore('y');
@@ -257,21 +246,6 @@ export const DraggableRowBlock: React.FC<BlockProps> = props => {
   };
 
   const wantToPlaceNext = calcWantToPlaceNext(dragSourceItemType);
-
-  // useEffect(() => {
-  //   preview(getEmptyImage(), { captureDraggingState: true })
-  // }, [])
-
-  console.log('drag state', {
-    id: props.node.id,
-    draggedId: dragSourceItemId,
-    isDragging,
-    isOver,
-    wantToPlaceNext,
-    clientOffset,
-    initialClientOffset,
-    initialSourceClientOffset,
-  });
 
   return (
     <div ref={selfRef} style={{ width: '100%', height: '100%' }}>

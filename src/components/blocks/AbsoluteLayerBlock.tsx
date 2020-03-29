@@ -76,23 +76,14 @@ class LayerBlock extends React.Component<BlockProps> {
 export const AbsoluteLayerBlock: React.FC<BlockProps> = props => {
   const selfRef = React.useRef<HTMLDivElement | null>(null);
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{}, drag] = useDrag({
     item: { type: 'col', id: props.node.id },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
 
-  const [
-    {
-      clientOffset,
-      dragSourceItemId,
-      isOver,
-      initialClientOffset,
-      initialSourceClientOffset,
-    },
-    drop,
-  ] = useDrop({
+  const [{}, drop] = useDrop({
     accept: ['col', 'row', 'layer', 'custom', 'image', 'markdown'],
     canDrop: item => {
       const draggedNodeType = item.type;
@@ -122,7 +113,6 @@ export const AbsoluteLayerBlock: React.FC<BlockProps> = props => {
         !initialSourceClientOffset
       )
         return null;
-      console.log('DROP', props.node.id, (item as any).id);
 
       // geometry: figure out whether the dragged element should go after us or before us
       const relativeDraggedPosition = getDragPositionRelativeToTarget2(
@@ -174,16 +164,6 @@ export const AbsoluteLayerBlock: React.FC<BlockProps> = props => {
       ? selfRef.current.getBoundingClientRect()
       : null;
   };
-
-  console.log('drag state', {
-    id: props.node.id,
-    draggedId: dragSourceItemId,
-    isDragging,
-    isOver,
-    clientOffset,
-    initialClientOffset,
-    initialSourceClientOffset,
-  });
 
   return (
     <div ref={selfRef} style={{ width: '100%', height: '100%' }}>
