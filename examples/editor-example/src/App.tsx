@@ -16,6 +16,9 @@ import {
 import 'react-movable-block-editor/css/drag.css';
 import 'react-resizable/css/styles.css';
 
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import Backend from 'react-dnd-html5-backend';
+
 // Optional
 import { CustomEditorToolBar } from './CustomEditorToolBar';
 import { myRenderEditBlock, myRenderPreviewBlock } from './CustomBlocks';
@@ -43,6 +46,65 @@ const useStyles = makeStyles((theme: any) => ({
     marginRight: 5,
   },
 }));
+
+function Card({ text }: { text: string }) {
+  const [{ isDragging, opacity }, dragRef] = useDrag({
+    item: { type: 'card', text },
+    collect: monitor => ({
+      isDragging: monitor.isDragging(),
+      opacity: monitor.isDragging() ? 0.5 : 1,
+    }),
+  });
+  console.log('IS DRAGGING CARD', isDragging);
+  return (
+    <div
+      ref={dragRef}
+      style={{
+        width: 100,
+        height: 100,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: 'black',
+        opacity,
+      }}
+    >
+      {text}
+    </div>
+  );
+}
+
+const TargetDiv: React.FC<{
+  text: string;
+  cardInside: boolean;
+  canDrop: () => boolean;
+  onDrop: () => any;
+}> = ({ text, cardInside, canDrop, onDrop, children }) => {
+  const [{ isOver }, drop] = useDrop({
+    accept: 'card',
+    drop: onDrop,
+    canDrop,
+    collect: monitor => ({
+      isOver: !!monitor.isOver(),
+      canDrop: !!monitor.canDrop(),
+    }),
+  });
+
+  return (
+    <div
+      ref={drop}
+      style={{
+        width: 200,
+        height: 200,
+        borderStyle: 'dashed',
+        borderWidth: 1,
+        backgroundColor: isOver ? 'yellow' : undefined,
+      }}
+    >
+      {cardInside && <Card text={text} />}
+      {!cardInside && <div>Empty</div>}
+    </div>
+  );
+};
 
 const App: React.FC = () => {
   const classes = useStyles();
@@ -142,6 +204,13 @@ const App: React.FC = () => {
   const [showViewJsonModal, setShowViewJsonModal] = useState<boolean>(false);
   const [inputJson, setInputJson] = useState<string>('');
 
+  const [inSquare, setInSquare] = useState<string>('');
+
+  const onDropCard = (text: string) => {
+    setInSquare(text);
+  };
+  const canDrop = () => true;
+
   const loadFromJson = () => {
     try {
       setEditorState(JSON.parse(inputJson));
@@ -157,6 +226,52 @@ const App: React.FC = () => {
   if (!rootNode) {
     return <div>Error: no root node (id={editorState.rootNodeId})</div>;
   }
+
+  // return (
+  //   <div>
+  //     <DndProvider backend={Backend}>
+  //       <div
+  //         style={{
+  //           position: 'relative',
+  //           width: 300,
+  //           height: 300,
+  //           border: '1px solid grey',
+  //         }}
+  //       >
+  //         <div
+  //           style={{
+  //             position: 'absolute',
+  //             left: 500,
+  //             width: 100,
+  //             height: 100,
+  //             border: '1px solid',
+  //           }}
+  //         >
+  //           NON-TARGET
+  //         </div>
+  //         <div style={{ position: 'absolute', top: 0, left: 0 }}>
+  //           {inSquare === '' && <Card text="outside" />}
+  //         </div>
+  //         <div style={{ position: 'absolute', top: 0, left: 100 }}>
+  //           <TargetDiv
+  //             text="square 1"
+  //             canDrop={canDrop}
+  //             cardInside={'square 1' === inSquare}
+  //             onDrop={() => onDropCard('square 1')}
+  //           />
+  //         </div>
+  //         <div style={{ position: 'absolute', top: 0, left: 300 }}>
+  //           <TargetDiv
+  //             text="square 2"
+  //             canDrop={canDrop}
+  //             cardInside={'square 2' === inSquare}
+  //             onDrop={() => onDropCard('square 2')}
+  //           />
+  //         </div>
+  //       </div>
+  //     </DndProvider>
+  //   </div>
+  // );
 
   return (
     <div>

@@ -1,79 +1,17 @@
 import * as React from 'react';
 import {
-  parseTypes,
-  getDragPositionRelativeToTarget,
-  onDragStart,
-  onDropped,
-  DraggedInfo,
+  onDropped2,
+  getDragPositionRelativeToTarget2,
 } from '../../utils/dragHelpers';
 import { BlockProps } from './BlockProps';
+import {
+  useDrag,
+  DragSourceMonitor,
+  useDrop,
+  DropTargetMonitor,
+} from 'react-dnd';
 
-export class AbsoluteLayerBlock extends React.Component<BlockProps> {
-  selfRef: HTMLElement | null = null;
-
-  getBoundingRect = () => {
-    return this.selfRef && this.selfRef.getBoundingClientRect
-      ? this.selfRef.getBoundingClientRect()
-      : null;
-  };
-
-  canDrop = (types: Array<string>) => {
-    const { draggedNodeType } = parseTypes(types);
-    return (
-      draggedNodeType === 'row' ||
-      draggedNodeType === 'col' ||
-      draggedNodeType === 'markdown' ||
-      draggedNodeType === 'image' ||
-      draggedNodeType === 'layer' ||
-      draggedNodeType === 'custom'
-    );
-  };
-
-  onDrop = (e: React.DragEvent<HTMLDivElement>, _isPlaceHolder = false) => {
-    if (!this.canDrop(e.dataTransfer.types as Array<string>)) {
-      return;
-    }
-
-    e.stopPropagation();
-
-    const { draggedNodeId } = parseTypes(e.dataTransfer.types as Array<string>);
-    if (draggedNodeId) {
-      // geometry: figure out whether the dragged element should go after us or before us
-      const relativeDraggedPosition = getDragPositionRelativeToTarget(
-        e,
-        this.getBoundingRect()
-      );
-
-      const lastChildId = this.props.node.childrenIds.length
-        ? this.props.node.childrenIds[this.props.node.childrenIds.length - 1]
-        : undefined;
-
-      const draggedInfo = JSON.parse(
-        e.dataTransfer.getData('text/plain')
-      ) as DraggedInfo;
-
-      this.props.changeBlocks(
-        onDropped(
-          e.dataTransfer.types as Array<string>,
-          this.props.node.id,
-          relativeDraggedPosition
-            ? {
-                afterItemId: lastChildId, // for overlay stacking, display last on top
-                absolutePos: {
-                  top: relativeDraggedPosition.top - draggedInfo.startTop,
-                  left: relativeDraggedPosition.left - draggedInfo.startLeft,
-                },
-              }
-            : undefined
-        )
-      );
-    }
-  };
-
-  onDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
+class LayerBlock extends React.Component<BlockProps> {
   renderChild(nodeId: string) {
     const {
       changeBlocks,
@@ -94,24 +32,12 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
     });
   }
 
-  onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    if (this.canDrop(e.dataTransfer.types as Array<string>)) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  };
-
   render() {
     const { node, getNode } = this.props;
     const { childrenIds } = node;
 
     return (
       <div
-        ref={el => (this.selfRef = el)}
-        onDragOver={this.onDragOver}
-        onDrop={this.onDrop}
-        draggable
-        onDragStart={e => onDragStart(e, this.props.node, this.getBoundingRect)}
         style={{
           position: 'relative',
           width: node.width,
@@ -146,3 +72,116 @@ export class AbsoluteLayerBlock extends React.Component<BlockProps> {
     );
   }
 }
+
+export const AbsoluteLayerBlock: React.FC<BlockProps> = props => {
+  const selfRef = React.useRef<HTMLDivElement | null>(null);
+
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: 'col', id: props.node.id },
+    collect: (monitor: DragSourceMonitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const [
+    {
+      clientOffset,
+      dragSourceItemId,
+      dragSourceItemType,
+      isOver,
+      initialClientOffset,
+      initialSourceClientOffset,
+    },
+    drop,
+  ] = useDrop({
+    accept: ['col', 'row', 'layer', 'custom', 'image'],
+    canDrop: item => {
+      const { getNode, node } = props;
+      const parentNode = node.parentId ? getNode(node.parentId) : null;
+      const draggedNodeType = item.type;
+      return (
+        // if our parent is a row, allow to place a sibling(col) before/after us
+        (draggedNodeType === 'col' &&
+          parentNode &&
+          parentNode.type === 'row') ||
+        // if we have children, we don't know if they can handle drops
+        (!props.children &&
+          (draggedNodeType === 'row' ||
+            draggedNodeType === 'markdown' ||
+            draggedNodeType === 'image' ||
+            draggedNodeType === 'layer' ||
+            draggedNodeType === 'custom'))
+      );
+    },
+    drop: (item, monitor) => {
+      const isOver = monitor.isOver({ shallow: true });
+      // ?TODO check if already dropped in nested target... instead of shallow isOver check?
+      if (!isOver || !item || !clientOffset) return null;
+      console.log('DROP', props.node.id, (item as any).id);
+
+      // geometry: figure out whether the dragged element should go after us or before us
+      const relativeDraggedPosition = getDragPositionRelativeToTarget2(
+        { clientX: clientOffset.x, clientY: clientOffset.y },
+        getBoundingRect()
+      );
+
+      const lastChildId = props.node.childrenIds.length
+        ? props.node.childrenIds[props.node.childrenIds.length - 1]
+        : undefined;
+
+      props.changeBlocks(
+        onDropped2(
+          (item as any).id,
+          props.node.id,
+          relativeDraggedPosition
+            ? {
+                afterItemId: lastChildId, // for overlay stacking, display last on top
+                absolutePos: {
+                  top: relativeDraggedPosition.top - 0, // TODOdraggedInfo.startTop,
+                  left: relativeDraggedPosition.left - 0, // TODO,
+                },
+              }
+            : undefined
+        )
+      );
+      return { type: 'layer', id: props.node.id };
+    },
+    collect: (monitor: DropTargetMonitor) => {
+      const dragSourceItem = monitor.getItem();
+      return {
+        isOver: monitor.isOver({ shallow: true }),
+        initialClientOffset: monitor.getInitialClientOffset(),
+        clientOffset: monitor.getClientOffset(),
+        dragSourceItemType: dragSourceItem ? dragSourceItem.type : '',
+        dragSourceItemId: dragSourceItem ? dragSourceItem.id : '',
+        initialSourceClientOffset: monitor.getInitialSourceClientOffset(),
+      };
+    },
+  });
+
+  const getBoundingRect = () => {
+    return selfRef.current && selfRef.current.getBoundingClientRect
+      ? selfRef.current.getBoundingClientRect()
+      : null;
+  };
+
+  console.log('drag state', {
+    id: props.node.id,
+    draggedId: dragSourceItemId,
+    isDragging,
+    isOver,
+    clientOffset,
+    initialClientOffset,
+    initialSourceClientOffset,
+  });
+
+  return (
+    <div ref={selfRef} style={{ width: '100%', height: '100%' }}>
+      <div ref={drop} style={{ width: '100%', height: '100%' }}>
+        <div ref={drag} style={{ width: '100%', height: '100%' }}>
+          <LayerBlock {...props} />
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -23,8 +23,8 @@ export class MarkdownBlock extends React.Component<MarkdownBlockProps> {
     return (
       <div
         ref={el => (this.selfRef = el)}
-        draggable
-        onDragStart={e => onDragStart(e, this.props.node, this.getBoundingRect)}
+        // draggable
+        // onDragStart={e => onDragStart(e, this.props.node, this.getBoundingRect)}
         style={{
           width: '100%',
           height: '100%',

@@ -45,6 +45,20 @@ export function getDragPositionRelativeToTarget(
   };
 }
 
+export function getDragPositionRelativeToTarget2(
+  { clientX, clientY }: { clientX: number; clientY: number },
+  targetRect: ClientRect | null
+) {
+  if (!targetRect) return null;
+
+  return {
+    left: clientX - targetRect.left,
+    top: clientY - targetRect.top,
+    width: targetRect.width,
+    height: targetRect.height,
+  };
+}
+
 export function onDragStart(
   e: React.DragEvent<HTMLDivElement>,
   draggedNode: BlockNode,
@@ -78,6 +92,15 @@ export function onDropped(
   opts: MoveOpts = {}
 ) {
   const { draggedNodeId } = parseTypes(types);
+  return (value: BlockEditorValue) =>
+    move(value, draggedNodeId, targetNodeId, opts);
+}
+
+export function onDropped2(
+  draggedNodeId: string,
+  targetNodeId: string,
+  opts: MoveOpts = {}
+) {
   return (value: BlockEditorValue) =>
     move(value, draggedNodeId, targetNodeId, opts);
 }
