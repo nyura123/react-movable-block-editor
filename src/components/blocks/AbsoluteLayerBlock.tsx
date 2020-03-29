@@ -90,6 +90,7 @@ export const AbsoluteLayerBlock: React.FC<BlockProps> = props => {
       dragSourceItemType,
       isOver,
       initialClientOffset,
+      sourceClientOffset,
       initialSourceClientOffset,
     },
     drop,
@@ -115,8 +116,21 @@ export const AbsoluteLayerBlock: React.FC<BlockProps> = props => {
     },
     drop: (item, monitor) => {
       const isOver = monitor.isOver({ shallow: true });
+      const clientOffset = monitor.getClientOffset();
+      const sourceClientOffset = monitor.getSourceClientOffset();
+      const initialClientOffset = monitor.getInitialClientOffset();
+      const initialSourceClientOffset = monitor.getInitialSourceClientOffset();
+
       // ?TODO check if already dropped in nested target... instead of shallow isOver check?
-      if (!isOver || !item || !clientOffset) return null;
+      if (
+        !isOver ||
+        !item ||
+        !sourceClientOffset ||
+        !clientOffset ||
+        !initialClientOffset ||
+        !initialSourceClientOffset
+      )
+        return null;
       console.log('DROP', props.node.id, (item as any).id);
 
       // geometry: figure out whether the dragged element should go after us or before us
@@ -137,8 +151,12 @@ export const AbsoluteLayerBlock: React.FC<BlockProps> = props => {
             ? {
                 afterItemId: lastChildId, // for overlay stacking, display last on top
                 absolutePos: {
-                  top: relativeDraggedPosition.top - 0, // TODOdraggedInfo.startTop,
-                  left: relativeDraggedPosition.left - 0, // TODO,
+                  top:
+                    relativeDraggedPosition.top -
+                    (initialClientOffset.y - initialSourceClientOffset.y), // TODOdraggedInfo.startTop,
+                  left:
+                    relativeDraggedPosition.left -
+                    (initialClientOffset.x - initialSourceClientOffset.x), // TODO,
                 },
               }
             : undefined
@@ -154,6 +172,7 @@ export const AbsoluteLayerBlock: React.FC<BlockProps> = props => {
         clientOffset: monitor.getClientOffset(),
         dragSourceItemType: dragSourceItem ? dragSourceItem.type : '',
         dragSourceItemId: dragSourceItem ? dragSourceItem.id : '',
+        sourceClientOffset: monitor.getSourceClientOffset(),
         initialSourceClientOffset: monitor.getInitialSourceClientOffset(),
       };
     },

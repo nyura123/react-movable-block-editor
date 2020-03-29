@@ -251,12 +251,6 @@ export const DraggableColBlock: React.FC<BlockProps> = props => {
       { clientX: clientOffset.x, clientY: clientOffset.y },
       getBoundingRect()
     );
-    console.log(
-      '!!!',
-      props.node.id,
-      'relativeDraggedPosition',
-      relativeDraggedPosition
-    );
     const placeBefore =
       relativeDraggedPosition &&
       (axis === 'y'
