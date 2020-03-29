@@ -87,31 +87,22 @@ export const AbsoluteLayerBlock: React.FC<BlockProps> = props => {
     {
       clientOffset,
       dragSourceItemId,
-      dragSourceItemType,
       isOver,
       initialClientOffset,
-      sourceClientOffset,
       initialSourceClientOffset,
     },
     drop,
   ] = useDrop({
-    accept: ['col', 'row', 'layer', 'custom', 'image'],
+    accept: ['col', 'row', 'layer', 'custom', 'image', 'markdown'],
     canDrop: item => {
-      const { getNode, node } = props;
-      const parentNode = node.parentId ? getNode(node.parentId) : null;
       const draggedNodeType = item.type;
       return (
-        // if our parent is a row, allow to place a sibling(col) before/after us
-        (draggedNodeType === 'col' &&
-          parentNode &&
-          parentNode.type === 'row') ||
-        // if we have children, we don't know if they can handle drops
-        (!props.children &&
-          (draggedNodeType === 'row' ||
-            draggedNodeType === 'markdown' ||
-            draggedNodeType === 'image' ||
-            draggedNodeType === 'layer' ||
-            draggedNodeType === 'custom'))
+        draggedNodeType === 'row' ||
+        draggedNodeType === 'col' ||
+        draggedNodeType === 'markdown' ||
+        draggedNodeType === 'image' ||
+        draggedNodeType === 'layer' ||
+        draggedNodeType === 'custom'
       );
     },
     drop: (item, monitor) => {

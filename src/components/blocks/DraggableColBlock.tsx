@@ -163,7 +163,7 @@ export const DraggableColBlock: React.FC<BlockProps> = props => {
     },
     drop,
   ] = useDrop({
-    accept: ['col', 'row', 'layer', 'custom', 'image'],
+    accept: ['col', 'row', 'layer', 'custom', 'image', 'markdown'],
     canDrop: item => {
       const { getNode, node } = props;
       const parentNode = node.parentId ? getNode(node.parentId) : null;

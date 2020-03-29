@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { onDragStart } from '../../utils/dragHelpers';
 import { BlockProps } from './BlockProps';
+import { useDrag, DragSourceMonitor } from 'react-dnd';
 
-export class ImageBlock extends React.Component<BlockProps> {
+class ImageBlockComp extends React.Component<BlockProps> {
   selfRef: HTMLElement | null = null;
 
   getBoundingRect = () => {
@@ -32,3 +32,18 @@ export class ImageBlock extends React.Component<BlockProps> {
     );
   }
 }
+
+export const ImageBlock: React.FC<BlockProps> = props => {
+  const [{}, drag] = useDrag({
+    item: { type: 'image', id: props.node.id },
+    collect: (monitor: DragSourceMonitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  return (
+    <div ref={drag} style={{ width: '100%', height: '100%' }}>
+      <ImageBlockComp {...props} />
+    </div>
+  );
+};
