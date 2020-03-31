@@ -17,7 +17,7 @@ import {
 type WantToPlaceNext = 'left' | 'right' | 'firstChild' | 'lastChild' | null;
 
 const ColBlock: React.FC<
-  BlockProps & { wantToPlaceNext: WantToPlaceNext }
+  BlockProps & { wantToPlaceNext: WantToPlaceNext; isDragging: boolean }
 > = props => {
   const { wantToPlaceNext } = props;
 
@@ -64,6 +64,7 @@ const ColBlock: React.FC<
       key={'col_' + node.id}
       style={{
         display: 'flex',
+        opacity: props.isDragging ? 0.5 : 1,
         flexDirection: 'row',
         width: '100%',
         height: '100%',
@@ -158,7 +159,7 @@ const ColBlock: React.FC<
 export const DraggableColBlock: React.FC<BlockProps> = props => {
   const selfRef = useRef<HTMLDivElement | null>(null);
 
-  const [{}, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     item: { type: 'col', id: props.node.id },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
@@ -281,6 +282,7 @@ export const DraggableColBlock: React.FC<BlockProps> = props => {
             {...props}
             {...{
               wantToPlaceNext,
+              isDragging,
             }}
           />
         </div>

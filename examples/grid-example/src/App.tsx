@@ -59,7 +59,7 @@ const App: React.FC = () => {
         id: 'container1',
         type: 'layer',
         name: 'container1',
-        parentId: null, // root
+        parentId: undefined, // root
         width: 500,
         height: 300,
         childrenIds: [],

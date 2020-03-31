@@ -204,7 +204,7 @@ export function addImage(
       ? props.value
       : window.prompt(
           'Please enter image url',
-          'http://lorempixel.com/200/200/'
+          'https://lorempixel.com/200/200/'
         );
   if (url === null) return { error: 'no image selected', value };
 

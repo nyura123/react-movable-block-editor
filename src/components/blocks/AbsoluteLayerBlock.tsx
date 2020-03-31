@@ -11,7 +11,7 @@ import {
   DropTargetMonitor,
 } from 'react-dnd';
 
-class LayerBlock extends React.Component<BlockProps> {
+class LayerBlock extends React.Component<BlockProps & { isDragging: boolean }> {
   renderChild(nodeId: string) {
     const {
       changeBlocks,
@@ -49,6 +49,7 @@ class LayerBlock extends React.Component<BlockProps> {
       <div
         style={{
           position: 'relative',
+          opacity: this.props.isDragging ? 0.5 : 1,
           width: node.width,
           height: node.height,
           backgroundColor: node.backgroundColor || '#f5f5f5a3',
@@ -85,7 +86,7 @@ class LayerBlock extends React.Component<BlockProps> {
 export const AbsoluteLayerBlock: React.FC<BlockProps> = props => {
   const selfRef = React.useRef<HTMLDivElement | null>(null);
 
-  const [{}, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     item: { type: 'col', id: props.node.id },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
@@ -178,7 +179,7 @@ export const AbsoluteLayerBlock: React.FC<BlockProps> = props => {
     <div ref={selfRef} style={{ width: '100%', height: '100%' }}>
       <div ref={drop} style={{ width: '100%', height: '100%' }}>
         <div ref={drag} style={{ width: '100%', height: '100%' }}>
-          <LayerBlock {...props} />
+          <LayerBlock {...props} {...{ isDragging }} />
         </div>
       </div>
     </div>

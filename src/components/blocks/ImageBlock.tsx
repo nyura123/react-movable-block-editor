@@ -2,7 +2,9 @@ import * as React from 'react';
 import { BlockProps } from './BlockProps';
 import { useDrag, DragSourceMonitor } from 'react-dnd';
 
-class ImageBlockComp extends React.Component<BlockProps> {
+class ImageBlockComp extends React.Component<
+  BlockProps & { isDragging: boolean }
+> {
   selfRef: HTMLElement | null = null;
 
   getBoundingRect = () => {
@@ -20,6 +22,7 @@ class ImageBlockComp extends React.Component<BlockProps> {
         // draggable
         // onDragStart={e => onDragStart(e, this.props.node, this.getBoundingRect)}
         style={{
+          opacity: this.props.isDragging ? 0.5 : 1,
           width: '100%',
           height: '100%',
           backgroundColor: 'violet',
@@ -34,7 +37,7 @@ class ImageBlockComp extends React.Component<BlockProps> {
 }
 
 export const ImageBlock: React.FC<BlockProps> = props => {
-  const [{}, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     item: { type: 'image', id: props.node.id },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
@@ -43,7 +46,7 @@ export const ImageBlock: React.FC<BlockProps> = props => {
 
   return (
     <div ref={drag} style={{ width: '100%', height: '100%' }}>
-      <ImageBlockComp {...props} />
+      <ImageBlockComp {...props} {...{ isDragging }} />
     </div>
   );
 };

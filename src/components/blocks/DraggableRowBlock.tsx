@@ -16,7 +16,7 @@ import {
 type WantToPlaceNext = 'top' | 'bottom' | 'firstChild' | 'lastChild' | null;
 
 class RowBlock extends React.Component<
-  BlockProps & { wantToPlaceNext: WantToPlaceNext }
+  BlockProps & { wantToPlaceNext: WantToPlaceNext; isDragging: boolean }
 > {
   render() {
     const { children: reactChildren } = this.props;
@@ -43,7 +43,12 @@ class RowBlock extends React.Component<
       wantToPlaceNext === 'firstChild' ? firstChildPlaceholderWidth : 0;
 
     return (
-      <div key={'row_' + node.id}>
+      <div
+        key={'row_' + node.id}
+        style={{
+          opacity: this.props.isDragging ? 0.5 : 1,
+        }}
+      >
         {wantToPlaceNext === 'top' && (
           <div
             style={{
@@ -143,7 +148,7 @@ class RowBlock extends React.Component<
 export const DraggableRowBlock: React.FC<BlockProps> = props => {
   const selfRef = React.useRef<HTMLDivElement | null>(null);
 
-  const [{}, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     item: { type: 'row', id: props.node.id },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
@@ -267,6 +272,7 @@ export const DraggableRowBlock: React.FC<BlockProps> = props => {
             {...props}
             {...{
               wantToPlaceNext,
+              isDragging,
             }}
           />
         </div>

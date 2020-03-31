@@ -167,7 +167,7 @@ const App: React.FC = () => {
         height: 200,
         top: 0,
         left: 250,
-        value: 'http://lorempixel.com/200/200/',
+        value: 'https://lorempixel.com/200/200/',
         childrenIds: [],
       },
       content: {

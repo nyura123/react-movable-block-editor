@@ -7,7 +7,9 @@ export interface MarkdownBlockProps {
   update: (nodeId: string, props: Partial<BlockNode>) => any;
 }
 
-class MarkdownBlockComp extends React.Component<MarkdownBlockProps> {
+class MarkdownBlockComp extends React.Component<
+  MarkdownBlockProps & { isDragging: boolean }
+> {
   selfRef: HTMLElement | null = null;
 
   getBoundingRect = () => {
@@ -26,6 +28,7 @@ class MarkdownBlockComp extends React.Component<MarkdownBlockProps> {
         // draggable
         // onDragStart={e => onDragStart(e, this.props.node, this.getBoundingRect)}
         style={{
+          opacity: this.props.isDragging ? 0.5 : 1,
           width: '100%',
           height: '100%',
           backgroundColor: '#ffc0cb75',
@@ -47,7 +50,7 @@ class MarkdownBlockComp extends React.Component<MarkdownBlockProps> {
 }
 
 export const MarkdownBlock: React.FC<MarkdownBlockProps> = props => {
-  const [{}, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     item: { type: 'markdown', id: props.node.id },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
@@ -56,7 +59,7 @@ export const MarkdownBlock: React.FC<MarkdownBlockProps> = props => {
 
   return (
     <div ref={drag} style={{ width: '100%', height: '100%' }}>
-      <MarkdownBlockComp {...props} />
+      <MarkdownBlockComp {...props} {...{ isDragging }} />
     </div>
   );
 };

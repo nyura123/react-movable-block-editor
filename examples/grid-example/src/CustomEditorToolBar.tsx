@@ -59,7 +59,7 @@ export const CustomEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
 
   const [selectedMenu, setSelectedMenu] = useState<MenuType | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(
-    selectedNode ? selectedNode.color : undefined
+    selectedNode ? selectedNode.color || '' : undefined
   );
   const classes = useStyles();
 
@@ -73,7 +73,7 @@ export const CustomEditorToolBar: React.SFC<BlockEditorControlUIProps> = (
       <React.Fragment>
         <ColorButton
           onClick={() => toggleMenu(which)}
-          color={selectedNode[which]}
+          color={selectedNode ? selectedNode[which] || '' : ''}
         />
         {selectedMenu === which && (
           <div
@@ -301,8 +301,8 @@ function flipToFront(value: BlockEditorValue, nodeId: string | null) {
   const node = byId[nodeId];
   if (!node) return value;
   const parentId = node.parentId;
-  const parentNode = byId[parentId];
-  if (!parentNode) return value;
+  const parentNode = parentId ? byId[parentId] : null;
+  if (!parentNode || !parentId) return value;
   return move(value, nodeId, parentId, {
     afterItemId: parentNode.childrenIds[parentNode.childrenIds.length - 1],
   });
