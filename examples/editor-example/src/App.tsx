@@ -120,6 +120,8 @@ const App: React.FC = () => {
         id: 'container1',
         type: 'col',
         name: 'container1',
+        paddingLeftPercentWidth: 0.025,
+        paddingTopPercentHeight: 0.025,
         parentId: undefined, // root
         width: 560,
         height: 360,

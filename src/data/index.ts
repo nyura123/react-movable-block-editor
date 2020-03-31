@@ -22,6 +22,8 @@ export interface BlockNode {
   height: number;
   top?: number;
   left?: number;
+  paddingLeftPercentWidth?: number;
+  paddingTopPercentHeight?: number;
   borderWidth?: number;
   borderTopWidth?: number;
   borderBottomWidth?: number;

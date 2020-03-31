@@ -8,6 +8,8 @@ export interface AddBlockResult {
   value: BlockEditorValue;
 }
 
+const nestedElementPercentWidthHeight = 0.95;
+
 export function addRow(
   value: BlockEditorValue,
   props?: Partial<BlockNode>
@@ -40,7 +42,12 @@ export function addRow(
   const row: BlockNode = {
     type: 'row',
     height: 100,
-    width: parentNode && parentNode.width ? parentNode.width * 0.9 : 500,
+    width:
+      parentNode && parentNode.width
+        ? parentNode.width * nestedElementPercentWidthHeight
+        : 500,
+    paddingLeftPercentWidth: (1 - nestedElementPercentWidthHeight) / 2,
+    paddingTopPercentHeight: (1 - nestedElementPercentWidthHeight) / 2,
     ...props,
     id: newNodeId,
     name: newNodeId,
@@ -57,7 +64,8 @@ export function addRow(
     if (parentNode && parentNode.childrenIds.length >= 1) {
       const childHeight = Math.max(
         20,
-        (parentNode.height / parentNode.childrenIds.length) * 0.9
+        (parentNode.height / parentNode.childrenIds.length) *
+          nestedElementPercentWidthHeight
       );
       for (const childId of parentNode.childrenIds) {
         updates[childId] = { ...byId[childId], height: childHeight };
@@ -107,7 +115,11 @@ export function addCol(
   const col: BlockNode = {
     type: 'col',
     width: 100,
-    height: parentNode.height ? parentNode.height * 0.9 : 100,
+    height: parentNode.height
+      ? parentNode.height * nestedElementPercentWidthHeight
+      : 100,
+    paddingLeftPercentWidth: (1 - nestedElementPercentWidthHeight) / 2,
+    paddingTopPercentHeight: (1 - nestedElementPercentWidthHeight) / 2,
     ...props,
     id: newNodeId,
     name: newNodeId,
@@ -124,7 +136,8 @@ export function addCol(
     if (parentNode && parentNode.childrenIds.length >= 1) {
       const childWidth = Math.max(
         20,
-        (parentNode.width / parentNode.childrenIds.length) * 0.9
+        (parentNode.width / parentNode.childrenIds.length) *
+          nestedElementPercentWidthHeight
       );
       for (const childId of parentNode.childrenIds) {
         updates[childId] = { ...byId[childId], width: childWidth };
@@ -256,8 +269,10 @@ export function addLayer(
 
   const layer: BlockNode = {
     type: 'layer',
-    width: Math.max(1, parentNode.width * 0.9),
-    height: Math.max(1, parentNode.height * 0.9),
+    width: Math.max(1, parentNode.width * nestedElementPercentWidthHeight),
+    height: Math.max(1, parentNode.height * nestedElementPercentWidthHeight),
+    paddingLeftPercentWidth: (1 - nestedElementPercentWidthHeight) / 2,
+    paddingTopPercentHeight: (1 - nestedElementPercentWidthHeight) / 2,
     ...props,
     id: newNodeId,
     name: newNodeId,

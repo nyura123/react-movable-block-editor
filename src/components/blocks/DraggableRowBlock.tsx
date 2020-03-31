@@ -31,8 +31,14 @@ class RowBlock extends React.Component<
     } = this.props;
 
     const firstChildPlaceholderWidth = 3;
-    const paddingLeft = 0.05 * node.width;
-    const paddingTop = 0.05 * node.height;
+    const paddingLeft =
+      (node.paddingLeftPercentWidth !== undefined
+        ? node.paddingLeftPercentWidth
+        : 0.05) * node.width;
+    const paddingTop =
+      (node.paddingTopPercentHeight !== undefined
+        ? node.paddingTopPercentHeight
+        : 0.05) * node.height;
     let runningWidth =
       wantToPlaceNext === 'firstChild' ? firstChildPlaceholderWidth : 0;
 
