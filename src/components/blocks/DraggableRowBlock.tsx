@@ -31,6 +31,8 @@ class RowBlock extends React.Component<
     } = this.props;
 
     const firstChildPlaceholderWidth = 3;
+    const paddingLeft = 0.05 * node.width;
+    const paddingTop = 0.05 * node.height;
     let runningWidth =
       wantToPlaceNext === 'firstChild' ? firstChildPlaceholderWidth : 0;
 
@@ -66,6 +68,10 @@ class RowBlock extends React.Component<
                 height: '100%',
                 width: firstChildPlaceholderWidth,
                 backgroundColor: 'blue',
+                position: 'absolute',
+                top: paddingTop,
+                left: paddingLeft,
+                transform: `translate(${runningWidth}px,0)`,
               }}
             />
           )}
@@ -82,8 +88,8 @@ class RowBlock extends React.Component<
                       position: 'absolute',
                       width: node.width,
                       height: node.height,
-                      top: 0,
-                      left: 0,
+                      top: paddingTop,
+                      left: paddingLeft,
                       transform: `translate(${runningWidth}px,0)`,
                     }}
                   >
@@ -104,8 +110,8 @@ class RowBlock extends React.Component<
             <div
               style={{
                 position: 'absolute',
-                top: 0,
-                left: 0,
+                top: paddingTop,
+                left: paddingLeft,
                 transform: `translate(${runningWidth}px,0)`,
                 height: '100%',
                 width: firstChildPlaceholderWidth,

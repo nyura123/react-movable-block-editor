@@ -36,6 +36,9 @@ class LayerBlock extends React.Component<BlockProps> {
     const { node, getNode } = this.props;
     const { childrenIds } = node;
 
+    const paddingLeft = 0.05 * node.width;
+    const paddingTop = 0.05 * node.height;
+
     return (
       <div
         style={{
@@ -58,8 +61,8 @@ class LayerBlock extends React.Component<BlockProps> {
                 position: 'absolute',
                 width: node.width,
                 height: node.height,
-                top: 0,
-                left: 0,
+                top: paddingTop,
+                left: paddingLeft,
                 transform: `translate(${node.left}px,${node.top}px)`,
               }}
             >

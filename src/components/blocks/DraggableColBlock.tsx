@@ -48,6 +48,8 @@ const ColBlock: React.FC<
   const { childrenIds } = node;
 
   const firstChildPlaceholderHeight = 3;
+  const paddingLeft = 0.05 * node.width;
+  const paddingTop = 0.05 * node.height;
   let runningHeight =
     wantToPlaceNext === 'firstChild' ? firstChildPlaceholderHeight : 0;
 
@@ -74,11 +76,12 @@ const ColBlock: React.FC<
         style={{
           width: '100%',
           height: '100%',
+          position: 'relative',
           borderRadius: 3,
           backgroundColor: props.node.isPlaceHolder
             ? 'grey'
             : props.node.backgroundColor || '#ffffffa8',
-          borderStyle: 'solid',
+          borderStyle: 'dashed',
           borderWidth: 1,
         }}
       >
@@ -87,6 +90,10 @@ const ColBlock: React.FC<
             style={{
               height: 10,
               width: '100%',
+              position: 'absolute',
+              top: paddingTop,
+              left: paddingLeft,
+              transform: `translate(0,${runningHeight}px)`,
               backgroundColor: 'blue',
             }}
           />
@@ -104,8 +111,8 @@ const ColBlock: React.FC<
                     position: 'absolute',
                     width: row.width,
                     height: row.height,
-                    top: 0,
-                    left: 0,
+                    top: paddingTop,
+                    left: paddingLeft,
                     transform: `translate(0,${runningHeight}px)`,
                   }}
                 >
@@ -118,8 +125,8 @@ const ColBlock: React.FC<
         {wantToPlaceNext === 'lastChild' && (
           <div
             style={{
-              top: 0,
-              left: 0,
+              top: paddingLeft,
+              left: paddingTop,
               transform: `translate(0,${runningHeight}px)`,
               position: 'absolute',
               height: 10,

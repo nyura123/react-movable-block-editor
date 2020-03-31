@@ -121,8 +121,8 @@ const App: React.FC = () => {
         type: 'col',
         name: 'container1',
         parentId: undefined, // root
-        width: 500,
-        height: 300,
+        width: 560,
+        height: 360,
         childrenIds: ['layer1'],
       },
       layer1: {
@@ -131,7 +131,7 @@ const App: React.FC = () => {
         name: 'layer1',
         parentId: 'container1',
         width: 510,
-        height: 310,
+        height: 330,
         childrenIds: ['content', 'image1', 'row1'],
       },
       input1: {
@@ -164,7 +164,7 @@ const App: React.FC = () => {
         width: 200,
         height: 200,
         top: 0,
-        left: 280,
+        left: 250,
         value: 'http://lorempixel.com/200/200/',
         childrenIds: [],
       },
@@ -173,8 +173,8 @@ const App: React.FC = () => {
         type: 'markdown',
         name: 'content',
         parentId: 'layer1',
-        width: 240,
-        height: 230,
+        width: 200,
+        height: 200,
         top: 0,
         left: 16,
         value: `### Content 
@@ -193,7 +193,7 @@ const App: React.FC = () => {
         width: 210,
         height: 60,
         top: 230,
-        left: 270,
+        left: 250,
         childrenIds: ['input1', 'input2'],
       },
     },
