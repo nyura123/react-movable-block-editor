@@ -10,7 +10,8 @@ import { cloneDeep } from 'lodash';
 import { NodeOp } from '../blocks/BlockProps';
 
 import { DndProvider } from 'react-dnd';
-import Backend from 'react-dnd-html5-backend';
+import Html5Backend from 'react-dnd-html5-backend';
+import TouchBackend from 'react-dnd-touch-backend';
 
 export interface BlockEditorState {
   value: BlockEditorValue;
@@ -22,6 +23,8 @@ export class BlockEditor extends React.Component<
   BlockEditorProps,
   BlockEditorState
 > {
+  haveHtml5DndAPI = haveDraggableHtml5API();
+
   state = {
     value: this.props.value,
   };
@@ -90,6 +93,8 @@ export class BlockEditor extends React.Component<
     } = this.state as BlockEditorState;
     const rootNode = byId[rootNodeId] as BlockNode;
 
+    const Backend = this.haveHtml5DndAPI ? Html5Backend : TouchBackend;
+
     // console.log('LAYOUT:', JSON.stringify(byId), JSON.stringify(rootNode));
 
     return (
@@ -115,4 +120,15 @@ export class BlockEditor extends React.Component<
       </div>
     );
   }
+}
+
+// https://stackoverflow.com/questions/2856262/detecting-html5-drag-and-drop-support-in-javascript
+function haveDraggableHtml5API() {
+  const iOS =
+    !!navigator.userAgent.match('iPhone OS') ||
+    !!navigator.userAgent.match('iPad');
+  if (iOS) return false;
+
+  const div = window.document.createElement('div');
+  return 'draggable' in div || ('ondragstart' in div && 'ondrop' in div);
 }
