@@ -61,16 +61,26 @@ export function removeNode(byId: ById, nodeId: string) {
 export function hasDescendent(
   byId: ById,
   nodeId: string,
-  descendentId: string
+  descendentId: string,
+  checked: { [id: string]: boolean } = {}
 ): boolean {
+  if (checked[nodeId]) return true; //CYCLE
+  checked[nodeId] = true;
   const node = byId[nodeId];
-  if (!node) return false;
+  if (!node) {
+    return false;
+  }
   if (node.childrenIds.indexOf(descendentId) >= 0) {
     return true;
   }
   for (const childId of node.childrenIds) {
-    const descendentOfChild = hasDescendent(byId, childId, descendentId);
-    if (descendentOfChild) return false;
+    const descendentOfChild = hasDescendent(
+      byId,
+      childId,
+      descendentId,
+      checked
+    );
+    if (descendentOfChild) return true;
   }
   return false;
 }
@@ -94,7 +104,7 @@ export function placeNodeInParent(
       newParentId,
       ' as child, so cannot make it into',
       node.id,
-      "'s parent"
+      "'s parent OR there's a cycle"
     );
     return byId;
   }
